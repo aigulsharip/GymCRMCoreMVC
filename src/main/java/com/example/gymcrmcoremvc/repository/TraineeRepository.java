@@ -1,6 +1,6 @@
-package com.example.gymcrmcore.repository;
+package com.example.gymcrmcoremvc.repository;
 
-import com.example.gymcrmcore.entity.Trainee;
+import com.example.gymcrmcoremvc.entity.Trainee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

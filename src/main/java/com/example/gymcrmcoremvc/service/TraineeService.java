@@ -1,7 +1,7 @@
-package com.example.gymcrmcore.service;
+package com.example.gymcrmcoremvc.service;
 
-import com.example.gymcrmcore.entity.Trainee;
-import com.example.gymcrmcore.repository.TraineeRepository;
+import com.example.gymcrmcoremvc.entity.Trainee;
+import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,6 @@ public class TraineeService {
     }
 
     public Optional<Trainee> getTraineeById(Long id) {
-        log.info("Fetching trainee by ID: {}", id);
         return traineeRepository.findById(id);
     }
 

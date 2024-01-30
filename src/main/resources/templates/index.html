@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Gym CRM</title>
+    <!-- Add your CSS and other head elements here -->
+</head>
+
+<body>
+<h2>Welcome to Gym CRM</h2>
+
+<div>
+    <h3>Trainees</h3>
+    <a th:href="@{/trainees}" class="btn btn-primary">Manage Trainees</a>
+</div>
+
+<div>
+    <h3>Trainers</h3>
+    <a th:href="@{/trainers}" class="btn btn-primary">Manage Trainers</a>
+</div>
+
+<div>
+    <h3>Training Types</h3>
+    <a th:href="@{/training-types}" class="btn btn-primary">Manage Training Types</a>
+</div>
+
+<div>
+    <h3>Trainings</h3>
+    <a th:href="@{/trainings}" class="btn btn-primary">Manage Trainings</a>
+</div>
+
+<!-- Add your JavaScript and other body elements here -->
+</body>
+
+</html>

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 
@@ -72,8 +73,8 @@ public class TrainerService {
 
     private String calculateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;
-        String calculatedUsername = baseUsername;
-        int counter = 0;
+        String calculatedUsername = baseUsername.toLowerCase(Locale.ROOT);
+        int counter = 1;
 
         while (trainerRepository.existsByUsername(calculatedUsername)) {
             calculatedUsername = baseUsername + counter++;

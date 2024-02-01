@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Training</title>
+</head>
+<body>
+
+<h2>Edit Training</h2>
+
+<form th:object="${training}" th:action="@{/trainings/edit/{id}(id=${training.id})}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+    <label>Trainee:
+        <select th:field="*{trainee.id}" required>
+            <option th:each="trainee : ${trainees}" th:value="${trainee.id}" th:text="${trainee.firstName + ' ' + trainee.lastName}"></option>
+        </select>
+    </label><br>
+    <label>Trainer:
+        <select th:field="*{trainer.id}" required>
+            <option th:each="trainer : ${trainers}" th:value="${trainer.id}" th:text="${trainer.firstName + ' ' + trainer.lastName}"></option>
+        </select>
+    </label><br>
+    <label>Training Type:
+        <select th:field="*{trainingType.id}" required>
+            <option th:each="type : ${trainingTypes}" th:value="${type.id}" th:text="${type.trainingTypeName}"></option>
+        </select>
+    </label><br>
+    <label>Training Name: <input type="text" th:field="*{trainingName}" required/></label><br>
+    <label>Training Date: <input type="date" th:field="*{trainingDate}" required/></label><br>
+    <label>Training Duration: <input type="number" th:field="*{trainingDuration}" required/></label><br>
+    <input type="submit" value="Save"/>
+</form>
+
+<a href="/trainings">Back to Training List</a>
+
+</body>
+</html>

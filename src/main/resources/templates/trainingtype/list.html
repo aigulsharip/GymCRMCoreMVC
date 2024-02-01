@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Training Types</title>
+    <!-- Add your CSS and other head elements here -->
+</head>
+
+<body>
+<h2>Training Types</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Training Type Name</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="trainingType : ${trainingTypes}">
+        <td th:text="${trainingType.id}"></td>
+        <td th:text="${trainingType.trainingTypeName}"></td>
+        <td>
+            <a th:href="@{/training-types/edit/{id}(id=${trainingType.id})}">Edit</a>
+            <a th:href="@{/training-types/delete/{id}(id=${trainingType.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/training-types/create}">Create New Training Type</a>
+
+<!-- Add your JavaScript and other body elements here -->
+</body>
+
+</html>

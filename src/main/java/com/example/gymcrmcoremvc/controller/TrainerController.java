@@ -98,4 +98,16 @@ public class TrainerController {
             return "redirect:/trainers"; // Redirect to the trainee list or another appropriate page
         }
     }
+
+    @PostMapping("/profile/{username}/change-password")
+    public String changePassword(@PathVariable String username, @RequestParam String newPassword, Model model) {
+        try {
+            trainerService.updateTrainerPassword(username, newPassword);
+            model.addAttribute("successMessage", "Password changed successfully!");
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Failed to change password. Please try again.");
+        }
+
+        return "redirect:/trainers/profile/" + username + "?successMessage=Password changed successfully!";
+    }
 }

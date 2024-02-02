@@ -17,6 +17,23 @@
 <p><strong>Active:</strong> <span th:text="${trainer.isActive}"></span></p>
 <p><strong>Training Type:</strong> <span th:text="${trainer.trainingType != null} ? ${trainer.trainingType.trainingTypeName} : ''"></span></p>
 
+<!-- Change Password Form -->
+<form th:action="@{/trainers/profile/{username}/change-password(username=${trainer.username})}" method="post">
+    <label>New Password: <input type="password" name="newPassword" required/></label>
+    <input type="submit" value="Change Password"/>
+</form>
+
+<!-- Display success message if present -->
+<div th:if="${param.successMessage}">
+    <p style="color: green;" th:text="${param.successMessage}"></p>
+</div>
+
+<!-- Display error message if present -->
+<div th:if="${param.errorMessage}">
+    <p style="color: red;" th:text="${param.errorMessage}"></p>
+</div>
+
+
 <a th:href="@{/trainers}" class="btn btn-primary">Back to Trainer List</a>
 
 </body>

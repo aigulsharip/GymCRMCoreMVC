@@ -97,6 +97,20 @@ public class TraineeController {
         }
     }
 
+    @PostMapping("/profile/{username}/change-password")
+    public String changePassword(@PathVariable String username, @RequestParam String newPassword, Model model) {
+        try {
+            traineeService.updateTraineePassword(username, newPassword);
+            return "redirect:/trainees/profile/" + username.toLowerCase() + "?successMessage=Password changed successfully";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Failed to change password. Please try again.");
+            return "redirect:/trainees/profile/" + username.toLowerCase() + "?errorMessage=Failed to change password. Please try again.";
+        }
+    }
+
+
+
+
 
 }
 

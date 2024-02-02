@@ -76,6 +76,19 @@ public class TraineeService {
         return traineeRepository.findByUsername(username);
     }
 
+    public Trainee updateTraineePassword(String username, String newPassword) {
+        Optional<Trainee> traineeOptional = getTraineeByUsername(username);
+
+        if (traineeOptional.isPresent()) {
+            Trainee trainee = traineeOptional.get();
+            trainee.setPassword(newPassword);
+            return traineeRepository.save(trainee);
+        } else {
+            // Handle the case where the trainee with the given username is not found
+            throw new EntityNotFoundException("Trainee with username " + username + " not found");
+        }
+    }
+
     private String calculateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;
         String calculatedUsername = baseUsername.toLowerCase(Locale.ROOT);

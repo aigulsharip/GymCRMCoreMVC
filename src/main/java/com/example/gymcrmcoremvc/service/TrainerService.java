@@ -76,6 +76,19 @@ public class TrainerService {
         return trainerRepository.findByUsername(username);
     }
 
+    public void updateTrainerPassword(String username, String newPassword) {
+        Optional<Trainer> trainerOptional = trainerRepository.findByUsername(username);
+
+        if (trainerOptional.isPresent()) {
+            Trainer trainer = trainerOptional.get();
+            trainer.setPassword(newPassword);
+            trainerRepository.save(trainer);
+        } else {
+            throw new EntityNotFoundException("Trainer with username " + username + " not found");
+        }
+    }
+
+
 
     private String calculateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;

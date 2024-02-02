@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trainer Login</title>
+</head>
+<body>
+
+<h2>Trainer Login</h2>
+
+<form th:object="${trainer}" th:action="@{/trainer-login/authenticate}" method="post">
+    <label>Username: <input type="text" th:field="*{username}" required/></label><br>
+    <label>Password: <input type="password" th:field="*{password}" required/></label><br>
+
+    <input type="submit" value="Login"/>
+</form>
+
+<p th:if="${error}" style="color: red" th:text="${error}"></p>
+
+
+</body>
+</html>

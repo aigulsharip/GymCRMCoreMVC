@@ -71,6 +71,11 @@ public class TraineeService {
         traineeRepository.deleteById(id);
     }
 
+    public Optional<Trainee> getTraineeByUsername(String username) {
+        log.info("Fetching trainee by username: {}", username);
+        return traineeRepository.findByUsername(username);
+    }
+
     private String calculateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;
         String calculatedUsername = baseUsername.toLowerCase(Locale.ROOT);

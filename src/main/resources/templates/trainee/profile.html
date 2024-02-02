@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trainee Profile</title>
+</head>
+<body>
+
+<h2>Trainee Profile</h2>
+
+<!-- Display trainee details here -->
+<p th:text="'Username: ' + ${trainee.username}"></p>
+<p th:text="'First Name: ' + ${trainee.firstName}"></p>
+<p th:text="'Last Name: ' + ${trainee.lastName}"></p>
+<p th:text="'Date of Birth: ' + ${trainee.dateOfBirth}"></p>
+<p th:text="'Address: ' + ${trainee.address}"></p>
+
+
+
+<a href="/trainees">Back to Trainee List</a>
+
+</body>
+</html>

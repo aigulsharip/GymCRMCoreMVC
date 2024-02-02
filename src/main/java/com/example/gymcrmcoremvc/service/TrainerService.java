@@ -1,5 +1,6 @@
 package com.example.gymcrmcoremvc.service;
 
+import com.example.gymcrmcoremvc.entity.Trainee;
 import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -70,6 +71,11 @@ public class TrainerService {
         log.info("Deleting trainer with ID: {}", id);
         trainerRepository.deleteById(id);
     }
+
+    public Optional<Trainer> getTrainerByUsername(String username) {
+        return trainerRepository.findByUsername(username);
+    }
+
 
     private String calculateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;

@@ -1,5 +1,6 @@
 package com.example.gymcrmcoremvc.controller;
 
+import com.example.gymcrmcoremvc.entity.Trainee;
 import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.entity.TrainingType;
 import com.example.gymcrmcoremvc.service.TrainerService;
@@ -22,10 +23,31 @@ public class TrainerController {
     private TrainingTypeService trainingTypeService;
 
     @GetMapping
-    public String getAllTrainers(Model model) {
-        List<Trainer> trainers = trainerService.getAllTrainers();
-        model.addAttribute("trainers", trainers);
-        return "trainer/list";
+    public String getAllTrainers(Model model, @RequestParam(name = "search", required = false) String search) {
+        List<Trainer> trainers;
+
+        if (search != null && !search.isEmpty()) {
+            // Perform a search based on the provided username
+            Optional<Trainer> trainer = trainerService.getTrainerByUsername(search);
+
+            if (trainer.isPresent()) {
+                // If a trainee is found, display its profile
+                model.addAttribute("trainer", trainer.get());
+                return "trainer/profile";
+            } else {
+                // If no trainee is found, display the list with a message
+                trainers = trainerService.getAllTrainers();
+                model.addAttribute("trainers", trainers);
+                model.addAttribute("search", search);
+                model.addAttribute("searchMessage", "No trainer found for username: " + search);
+                return "trainer/list";
+            }
+        } else {
+            // If no search criteria provided, display the list of all trainees
+            trainers = trainerService.getAllTrainers();
+            model.addAttribute("trainers", trainers);
+            return "trainer/list";
+        }
     }
 
     @GetMapping("/add")
@@ -62,5 +84,18 @@ public class TrainerController {
     public String deleteTrainer(@PathVariable Long id) {
         trainerService.deleteTrainer(id);
         return "redirect:/trainers";
+    }
+
+    @GetMapping("/profile/{username}")
+    public String viewTrainerProfile(@PathVariable String username, Model model) {
+        Optional<Trainer> trainer = trainerService.getTrainerByUsername(username);
+
+        if (trainer.isPresent()) {
+            model.addAttribute("trainer", trainer.get());
+            return "trainer/profile";
+        } else {
+            // Handle the case where the trainee with the given username is not found
+            return "redirect:/trainers"; // Redirect to the trainee list or another appropriate page
+        }
     }
 }

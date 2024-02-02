@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Profile</title>
+</head>
+<body>
+
+<h2>Trainer Profile</h2>
+
+<p><strong>First Name:</strong> <span th:text="${trainer.firstName}"></span></p>
+<p><strong>Last Name:</strong> <span th:text="${trainer.lastName}"></span></p>
+<p><strong>Username:</strong> <span th:text="${trainer.username}"></span></p>
+<p><strong>Password:</strong> <span th:text="${trainer.password}"></span></p>
+<p><strong>Active:</strong> <span th:text="${trainer.isActive}"></span></p>
+<p><strong>Training Type:</strong> <span th:text="${trainer.trainingType != null} ? ${trainer.trainingType.trainingTypeName} : ''"></span></p>
+
+<a th:href="@{/trainers}" class="btn btn-primary">Back to Trainer List</a>
+
+</body>
+</html>

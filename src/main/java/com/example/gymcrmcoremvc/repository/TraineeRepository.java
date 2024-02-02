@@ -11,4 +11,6 @@ public interface TraineeRepository extends JpaRepository<Trainee, Long> {
     boolean existsByUsername(String username);
 
     Optional<Trainee> findByUsernameAndPassword (String username, String password);
+
+    Optional<Trainee> findByUsername(String username);
 }

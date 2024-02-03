@@ -88,6 +88,19 @@ public class TrainerService {
         }
     }
 
+    public void updateTrainerStatus(Long id, boolean isActive) {
+        Optional<Trainer> trainerOptional = trainerRepository.findById(id);
+
+        if (trainerOptional.isPresent()) {
+            Trainer trainer = trainerOptional.get();
+            trainer.setIsActive(isActive);
+            trainerRepository.save(trainer);
+            log.info("Trainer with ID {} status updated to isActive={}", id, isActive);
+        } else {
+            throw new EntityNotFoundException("Trainer with ID " + id + " not found");
+        }
+    }
+
 
 
     private String calculateUsername(String firstName, String lastName) {

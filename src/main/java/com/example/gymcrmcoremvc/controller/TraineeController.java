@@ -108,6 +108,18 @@ public class TraineeController {
         }
     }
 
+    @GetMapping("/activate/{id}")
+    public String activateTrainee(@PathVariable Long id) {
+        traineeService.updateTraineeStatus(id, true);
+        return "redirect:/trainees";
+    }
+
+    @GetMapping("/deactivate/{id}")
+    public String deactivateTrainee(@PathVariable Long id) {
+        traineeService.updateTraineeStatus(id, false);
+        return "redirect:/trainees";
+    }
+
 
 
 

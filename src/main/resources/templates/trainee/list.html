@@ -29,6 +29,7 @@
         <th>Date of Birth</th>
         <th>Address</th>
         <th>Actions</th>
+        <th>Activate/Deactivate</th>
     </tr>
 
     <tr th:each="trainee : ${trainees}">
@@ -44,6 +45,10 @@
 
             <a th:href="@{/trainees/edit/{id}(id=${trainee.id})}">Edit</a>
             <a th:href="@{/trainees/delete/{id}(id=${trainee.id})}">Delete</a>
+        </td>
+        <td>
+            <a th:href="@{/trainees/activate/{id}(id=${trainee.id})}">Activate</a>
+            <a th:href="@{/trainees/deactivate/{id}(id=${trainee.id})}">Deactivate</a>
         </td>
     </tr>
     <tr th:if="${trainees == null or trainees.isEmpty()}">

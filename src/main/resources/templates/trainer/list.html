@@ -30,6 +30,7 @@
         <th>Active</th>
         <th>Training Type</th>
         <th>Actions</th>
+        <th>Activate/Deactivate</th>
     </tr>
     </thead>
     <tbody>
@@ -44,6 +45,10 @@
             <a th:href="@{/trainers/profile/{username}(username=${trainer.username})}">View Profile</a>
             <a th:href="@{/trainers/edit/{id}(id=${trainer.id})}">Edit</a>
             <a th:href="@{/trainers/delete/{id}(id=${trainer.id})}">Delete</a>
+        </td>
+        <td>
+            <a th:href="@{/trainers/activate/{id}(id=${trainer.id})}">Activate</a>
+            <a th:href="@{/trainers/deactivate/{id}(id=${trainer.id})}">Deactivate</a>
         </td>
     </tr>
     </tbody>

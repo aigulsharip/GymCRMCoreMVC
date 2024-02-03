@@ -110,4 +110,16 @@ public class TrainerController {
 
         return "redirect:/trainers/profile/" + username + "?successMessage=Password changed successfully!";
     }
+
+    @GetMapping("/activate/{id}")
+    public String activateTrainer(@PathVariable Long id) {
+        trainerService.updateTrainerStatus(id, true);
+        return "redirect:/trainers";
+    }
+
+    @GetMapping("/deactivate/{id}")
+    public String deactivateTrainer(@PathVariable Long id) {
+        trainerService.updateTrainerStatus(id, false);
+        return "redirect:/trainers";
+    }
 }

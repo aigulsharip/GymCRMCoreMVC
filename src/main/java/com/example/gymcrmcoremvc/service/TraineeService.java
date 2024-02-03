@@ -110,4 +110,17 @@ public class TraineeService {
         }
         return sb.toString();
     }
+
+    public void updateTraineeStatus(Long id, boolean isActive) {
+        Optional<Trainee> traineeOptional = traineeRepository.findById(id);
+
+        if (traineeOptional.isPresent()) {
+            Trainee trainee = traineeOptional.get();
+            trainee.setIsActive(isActive);
+            traineeRepository.save(trainee);
+            log.info("Trainee with ID {} status updated to isActive={}", id, isActive);
+        } else {
+            throw new EntityNotFoundException("Trainee with ID " + id + " not found");
+        }
+    }
 }

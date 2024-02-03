@@ -1,26 +1,37 @@
 package com.example.gymcrmcoremvc.service;
 
 import com.example.gymcrmcoremvc.entity.Trainee;
+import com.example.gymcrmcoremvc.entity.Trainer;
+import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
+import com.example.gymcrmcoremvc.repository.TrainingRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Random;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 @Slf4j
 public class TraineeService {
 
     private final TraineeRepository traineeRepository;
+    private final TrainingRepository trainingRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
-    public TraineeService(TraineeRepository traineeRepository) {
+    public TraineeService(TraineeRepository traineeRepository, TrainingRepository trainingRepository) {
         this.traineeRepository = traineeRepository;
+        this.trainingRepository = trainingRepository;
     }
 
     public List<Trainee> getAllTrainees() {
@@ -135,4 +146,50 @@ public class TraineeService {
             throw new EntityNotFoundException("Trainee with username " + username + " not found");
         }
     }
+
+
+
+    public List<Training> getTraineeTrainingList(String username, LocalDate fromDate, LocalDate toDate, String trainerName, String trainingTypeName) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Training> criteriaQuery = criteriaBuilder.createQuery(Training.class);
+        Root<Training> root = criteriaQuery.from(Training.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        // Add username condition
+        predicates.add(criteriaBuilder.equal(root.join("trainee").get("username"), username));
+
+        // Add fromDate condition if provided
+        if (fromDate != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("trainingDate"), fromDate));
+        }
+
+        // Add toDate condition if provided
+        if (toDate != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("trainingDate"), toDate));
+        }
+
+        // Add trainerName condition if provided
+        if (trainerName != null && !trainerName.isEmpty()) {
+            Join<Training, Trainer> trainerJoin = root.join("trainer");
+            predicates.add(criteriaBuilder.or(
+                    criteriaBuilder.like(trainerJoin.get("firstName"), "%" + trainerName + "%"),
+                    criteriaBuilder.like(trainerJoin.get("lastName"), "%" + trainerName + "%")
+            ));
+        }
+
+        // Add trainingTypeName condition if provided
+        if (trainingTypeName != null && !trainingTypeName.isEmpty()) {
+            predicates.add(criteriaBuilder.like(root.join("trainingType").get("trainingTypeName"), "%" + trainingTypeName + "%"));
+        }
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+
+        TypedQuery<Training> query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
+
+
+
+
 }

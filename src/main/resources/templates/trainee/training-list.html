@@ -1,0 +1,47 @@
+<!-- trainee/training-list.html -->
+
+<!-- Other content... -->
+
+<h2>Trainee Training List</h2>
+
+<form th:action="@{/trainees/training-list}" method="get">
+
+    <label>Trainee Username:
+        <select th:field="*{trainee.username}" required>
+            <option th:each="trainee : ${trainees}" th:value="${trainee.username}" th:text="${trainee.username}"></option>
+        </select>
+    </label><br>
+
+    <label>From Date: <input type="date" name="fromDate" th:value="${fromDate}" /></label><br>
+    <label>To Date: <input type="date" name="toDate" th:value="${toDate}" /></label><br>
+    <label>Trainer Name: <input type="text" name="trainerName" th:value="${trainerName}" /></label><br>
+    <label>Training Type: <input type="text" name="trainingTypeName" th:value="${trainingTypeName}" /></label><br>
+
+    <input type="submit" value="Search"/>
+</form>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Trainee Name</th>
+        <th>Trainer Name </th>
+        <th>Training Type</th>
+        <th>Training Name</th>
+        <th>Training Date</th>
+        <th>Training Duration</th>
+        <!-- Add other columns as needed -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="training : ${trainingList}">
+        <td th:text="${training.trainee.firstName + ' ' + training.trainee.lastName}"></td>
+        <td th:text="${training.trainer.firstName + ' ' + training.trainer.lastName}"></td>
+        <td th:text="${training.trainingType.trainingTypeName}"></td>
+        <td th:text="${training.trainingName}"></td>
+        <td th:text="${training.trainingDate}"></td>
+        <td th:text="${training.trainingDuration}"></td>
+        <!-- Add other columns as needed -->
+    </tr>
+    </tbody>
+</table>
+
+<!-- Other content... -->

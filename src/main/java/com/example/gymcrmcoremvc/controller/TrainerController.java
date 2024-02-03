@@ -2,14 +2,17 @@ package com.example.gymcrmcoremvc.controller;
 
 import com.example.gymcrmcoremvc.entity.Trainee;
 import com.example.gymcrmcoremvc.entity.Trainer;
+import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.entity.TrainingType;
 import com.example.gymcrmcoremvc.service.TrainerService;
 import com.example.gymcrmcoremvc.service.TrainingTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 @Controller
@@ -122,4 +125,55 @@ public class TrainerController {
         trainerService.updateTrainerStatus(id, false);
         return "redirect:/trainers";
     }
+
+//    @GetMapping("/training-list")
+//    public String getTrainerTrainingList(
+//            @RequestParam(required = false) String username,
+//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+//            @RequestParam(required = false) String trainerName,
+//            @RequestParam(required = false) String trainingTypeName,
+//            Model model
+//    ) {
+//        List<Training> trainingList = trainerService.getTrainerTrainingList(username, fromDate, toDate, trainerName, trainingTypeName);
+//        model.addAttribute("trainingList", trainingList);
+//        List<Trainer> trainers = trainerService.getAllTrainers();
+//        model.addAttribute("trainers", trainers);
+//        model.addAttribute("trainer", new Trainer());  // Add an empty trainer object for binding
+//        return "trainer/training-list";
+//    }
+
+    @GetMapping("/training-list")
+    public String getTrainerTrainingList(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+            @RequestParam(required = false) String traineeName,
+            @RequestParam(required = false) String trainingTypeName,
+            Model model
+    ) {
+        // Logging to check parameter values
+        System.out.println("Username: " + username);
+        System.out.println("FromDate: " + fromDate);
+        System.out.println("ToDate: " + toDate);
+        System.out.println("TraineeName: " + traineeName);
+        System.out.println("TrainingTypeName: " + trainingTypeName);
+
+        List<Training> trainingList = trainerService.getTrainerTrainingList(username, fromDate, toDate, traineeName, trainingTypeName);
+
+        // Logging to check the size of the trainingList
+        System.out.println("TrainingList size: " + trainingList.size());
+
+        model.addAttribute("trainingList", trainingList);
+        model.addAttribute("trainers", trainerService.getAllTrainers());
+        model.addAttribute("trainer", new Trainer());  // Add an empty trainer object for binding
+        model.addAttribute("fromDate", fromDate);
+        model.addAttribute("toDate", toDate);
+        model.addAttribute("traineeName", traineeName);
+        model.addAttribute("trainingTypeName", trainingTypeName);
+
+        return "trainer/training-list";
+    }
+
+
 }

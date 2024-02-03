@@ -1,12 +1,15 @@
 package com.example.gymcrmcoremvc.controller;
 
 import com.example.gymcrmcoremvc.entity.Trainee;
+import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,6 +128,25 @@ public class TraineeController {
         traineeService.deleteTraineeByUsername(username);
         return "redirect:/trainees";
     }
+
+    @GetMapping("/training-list")
+    public String getTraineeTrainingList(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+            @RequestParam(required = false) String trainerName,
+            @RequestParam(required = false) String trainingTypeName,
+            Model model
+    ) {
+        List<Training> trainingList = traineeService.getTraineeTrainingList(username, fromDate, toDate, trainerName, trainingTypeName);
+        model.addAttribute("trainingList", trainingList);
+        List<Trainee> trainees = traineeService.getAllTrainees();
+        model.addAttribute("trainees", trainees);
+        model.addAttribute("trainee", new Trainee());  // Add an empty trainee object for binding
+        return "trainee/training-list";
+    }
+
+
 
 
 

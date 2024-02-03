@@ -30,6 +30,7 @@
         <th>Address</th>
         <th>Actions</th>
         <th>Activate/Deactivate</th>
+        <th>Delete by username</th>>
     </tr>
 
     <tr th:each="trainee : ${trainees}">
@@ -50,7 +51,11 @@
             <a th:href="@{/trainees/activate/{id}(id=${trainee.id})}">Activate</a>
             <a th:href="@{/trainees/deactivate/{id}(id=${trainee.id})}">Deactivate</a>
         </td>
+        <td>
+            <a th:href="@{/trainees/delete-by-username/{username}(username=${trainee.username})}" onclick="return confirm('Are you sure you want to delete this Trainee?')">Delete</a>
+        </td>
     </tr>
+
     <tr th:if="${trainees == null or trainees.isEmpty()}">
         <td colspan="8">No trainees found for the given search criteria.</td>
     </tr>

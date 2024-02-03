@@ -120,6 +120,12 @@ public class TraineeController {
         return "redirect:/trainees";
     }
 
+    @GetMapping("/delete-by-username/{username}")
+    public String deleteTraineeByUsername(@PathVariable String username) {
+        traineeService.deleteTraineeByUsername(username);
+        return "redirect:/trainees";
+    }
+
 
 
 

@@ -123,4 +123,16 @@ public class TraineeService {
             throw new EntityNotFoundException("Trainee with ID " + id + " not found");
         }
     }
+
+    public void deleteTraineeByUsername(String username) {
+        Optional<Trainee> traineeOptional = traineeRepository.findByUsername(username);
+
+        if (traineeOptional.isPresent()) {
+            Trainee trainee = traineeOptional.get();
+            traineeRepository.delete(trainee);
+            log.info("Trainee with username {} deleted successfully", username);
+        } else {
+            throw new EntityNotFoundException("Trainee with username " + username + " not found");
+        }
+    }
 }

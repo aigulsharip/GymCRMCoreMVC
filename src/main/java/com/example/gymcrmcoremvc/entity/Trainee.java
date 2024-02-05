@@ -1,12 +1,10 @@
 package com.example.gymcrmcoremvc.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "trainees")
@@ -20,9 +18,11 @@ public class Trainee {
     private Long id;
 
     @Column(name = "first_name", nullable = false)
+    @NotBlank(message = "First name is required")
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
+    @NotBlank(message = "Last name is required")
     private String lastName;
 
     @Column(name = "username", nullable = false, unique = true)

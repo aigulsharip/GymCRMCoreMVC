@@ -11,10 +11,7 @@
 <form th:object="${trainee}" th:action="@{/trainees/add}" method="post">
     <label>First Name: <input type="text" th:field="*{firstName}" required/></label><br>
     <label>Last Name: <input type="text" th:field="*{lastName}" required/></label><br>
-<!--    <label>Username: <input type="text" th:field="*{username}" required/></label><br>-->
-<!--    <label>Password: <input type="password" th:field="*{password}" required/></label><br>-->
-<!--    <label>Active: <input type="text" th:field="*{isActive}" required/></label><br>-->
-     <label>Date of Birth: <input type="date" th:field="*{dateOfBirth}"/></label><br>
+    <label>Date of Birth: <input type="date" th:field="*{dateOfBirth}"/></label><br>
     <label>Address: <input type="text" th:field="*{address}"/></label><br>
 
     <input type="submit" value="Add"/>

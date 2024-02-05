@@ -44,8 +44,10 @@
             <a th:href="@{/trainees/delete/{id}(id=${trainee.id})}">Delete</a>
         </td>
         <td>
-            <a th:href="@{/trainees/activate/{id}(id=${trainee.id})}">Activate</a>
-            <a th:href="@{/trainees/deactivate/{id}(id=${trainee.id})}">Deactivate</a>
+            <a th:href="@{/trainees/toggle-status/{id}(id=${trainee.id})}">
+                <span th:if="${trainee.isActive}">Deactivate</span>
+                <span th:unless="${trainee.isActive}">Activate</span>
+            </a>
         </td>
         <td>
             <a th:href="@{/trainees/delete-by-username/{username}(username=${trainee.username})}" onclick="return confirm('Are you sure you want to delete this Trainee?')">Delete</a>
@@ -63,6 +65,12 @@
 <a href="/">Back to Main page</a><br>
 
 <br>
+<script>
+    function toggleStatus(id, isActive) {
+        // You can perform additional logic here if needed
+        window.location.href = '/trainees/toggleStatus/' + id;
+    }
+</script>
 
 
 

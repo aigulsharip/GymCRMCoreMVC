@@ -12,8 +12,8 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -43,6 +43,7 @@ public class TraineeService {
         return traineeRepository.findById(id);
     }
 
+    @Transactional
     public Trainee saveTrainee(Trainee trainee) {
         log.info("Saving new trainee: {}", trainee);
         trainee.setUsername(calculateUsername(trainee.getFirstName(), trainee.getLastName()));
@@ -50,7 +51,7 @@ public class TraineeService {
         trainee.setIsActive(true);
         return traineeRepository.save(trainee);
     }
-
+    @Transactional
     public Trainee updateTrainee(Long id, Trainee updatedTrainee) {
         log.info("Updating trainee with ID {}: {}", id, updatedTrainee);
         Optional<Trainee> existingTraineeOptional = traineeRepository.findById(id);
@@ -76,6 +77,51 @@ public class TraineeService {
             throw new EntityNotFoundException("Trainee with id " + id + " not found");
         }
     }
+
+    public void toggleTraineeStatus(Long traineeId) {
+        Optional<Trainee> optionalTrainee = traineeRepository.findById(traineeId);
+
+        optionalTrainee.ifPresent(trainee -> {
+            // Toggle the isActive status
+            trainee.setIsActive(!trainee.getIsActive());
+            traineeRepository.save(trainee);
+        });
+    }
+
+
+//    public Trainee saveTrainee(Trainee trainee) {
+//        log.info("Saving new trainee: {}", trainee);
+//        trainee.setUsername(calculateUsername(trainee.getFirstName(), trainee.getLastName()));
+//        trainee.setPassword(generatePassword());
+//        trainee.setIsActive(true);
+//        return traineeRepository.save(trainee);
+//    }
+//
+//    public Trainee updateTrainee(Long id, Trainee updatedTrainee) {
+//        log.info("Updating trainee with ID {}: {}", id, updatedTrainee);
+//        Optional<Trainee> existingTraineeOptional = traineeRepository.findById(id);
+//
+//        if (existingTraineeOptional.isPresent()) {
+//            Trainee existingTrainee = existingTraineeOptional.get();
+//
+//            // Update the fields you want to allow modification
+//            existingTrainee.setFirstName(updatedTrainee.getFirstName());
+//            existingTrainee.setLastName(updatedTrainee.getLastName());
+//            existingTrainee.setUsername(updatedTrainee.getUsername());
+//            existingTrainee.setPassword(updatedTrainee.getPassword());
+//            existingTrainee.setIsActive(updatedTrainee.getIsActive());
+//            existingTrainee.setDateOfBirth(updatedTrainee.getDateOfBirth());
+//            existingTrainee.setAddress(updatedTrainee.getAddress());
+//
+//            Trainee updated = traineeRepository.save(existingTrainee);
+//            log.info("Trainee with ID {} updated successfully", id);
+//            return updated;
+//        } else {
+//            // Handle the case where the trainee with the given id is not found
+//            log.warn("Trainee with ID {} not found", id);
+//            throw new EntityNotFoundException("Trainee with id " + id + " not found");
+//        }
+//    }
 
     public void deleteTrainee(Long id) {
         log.info("Deleting trainee with ID: {}", id);
@@ -121,7 +167,7 @@ public class TraineeService {
         }
         return sb.toString();
     }
-
+    /*
     public void updateTraineeStatus(Long id, boolean isActive) {
         Optional<Trainee> traineeOptional = traineeRepository.findById(id);
 
@@ -132,6 +178,22 @@ public class TraineeService {
             log.info("Trainee with ID {} status updated to isActive={}", id, isActive);
         } else {
             throw new EntityNotFoundException("Trainee with ID " + id + " not found");
+        }
+    }
+
+     */
+
+    @Transactional
+    public void updateTraineeStatus(Long id, Boolean isActive) {
+        Optional<Trainee> optionalTrainee = traineeRepository.findById(id);
+
+        if (optionalTrainee.isPresent()) {
+            Trainee trainee = optionalTrainee.get();
+            trainee.setIsActive(isActive);
+            traineeRepository.save(trainee);
+        } else {
+            // Handle the case when Trainee with the given id is not found
+            throw new EntityNotFoundException("Trainee not found with id: " + id);
         }
     }
 

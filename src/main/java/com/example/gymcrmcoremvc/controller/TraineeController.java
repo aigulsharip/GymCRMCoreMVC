@@ -5,6 +5,7 @@ import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -24,13 +25,6 @@ public class TraineeController {
 
     @Autowired
     private TrainerService trainerService;
-
-//    @GetMapping
-//    public String getAllTrainees(Model model) {
-//        List<Trainee> trainees = traineeService.getAllTrainees();
-//        model.addAttribute("trainees", trainees);
-//        return "trainee/list";
-//    }
 
     @GetMapping
     public String getAllTrainees(Model model, @RequestParam(name = "search", required = false) String search) {
@@ -67,7 +61,7 @@ public class TraineeController {
     }
 
     @PostMapping("/add")
-    public String addTrainee(@ModelAttribute Trainee trainee) {
+    public String addTrainee(@Valid @ModelAttribute Trainee trainee) {
         traineeService.saveTrainee(trainee);
         return "redirect:/trainees";
     }
@@ -80,7 +74,7 @@ public class TraineeController {
     }
 
     @PostMapping("/edit/{id}")
-    public String editTrainee(@PathVariable Long id, @ModelAttribute Trainee trainee) {
+    public String editTrainee(@PathVariable Long id, @Valid @ModelAttribute Trainee trainee) {
         trainee.setId(id);
         traineeService.saveTrainee(trainee);
         return "redirect:/trainees";
@@ -117,15 +111,9 @@ public class TraineeController {
         }
     }
 
-    @GetMapping("/activate/{id}")
-    public String activateTrainee(@PathVariable Long id) {
-        traineeService.updateTraineeStatus(id, true);
-        return "redirect:/trainees";
-    }
-
-    @GetMapping("/deactivate/{id}")
-    public String deactivateTrainee(@PathVariable Long id) {
-        traineeService.updateTraineeStatus(id, false);
+    @GetMapping("/toggle-status/{id}")
+    public String toggleTraineeStatus(@PathVariable Long id) {
+        traineeService.toggleTraineeStatus(id);
         return "redirect:/trainees";
     }
 
@@ -134,23 +122,6 @@ public class TraineeController {
         traineeService.deleteTraineeByUsername(username);
         return "redirect:/trainees";
     }
-
-//    @GetMapping("/training-list")
-//    public String getTraineeTrainingList(
-//            @RequestParam(required = false) String username,
-//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
-//            @RequestParam(required = false) String trainerName,
-//            @RequestParam(required = false) String trainingTypeName,
-//            Model model
-//    ) {
-//        List<Training> trainingList = traineeService.getTraineeTrainingList(username, fromDate, toDate, trainerName, trainingTypeName);
-//        model.addAttribute("trainingList", trainingList);
-//        List<Trainee> trainees = traineeService.getAllTrainees();
-//        model.addAttribute("trainees", trainees);
-//        model.addAttribute("trainee", new Trainee());  // Add an empty trainee object for binding
-//        return "trainee/training-list";
-//    }
 
     @GetMapping("/training-list")
     public String getTraineeTrainingList(
@@ -181,13 +152,6 @@ public class TraineeController {
 
         return "trainee/training-list";
     }
-
-
-
-
-
-
-
 
 }
 

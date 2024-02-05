@@ -147,6 +147,29 @@ public class TrainerService {
         return query.getResultList();
     }
 
+    public List<Trainer> getAvailableTrainersByTrainee(Optional<Trainee> traineeOptional) {
+        if (traineeOptional.isPresent()) {
+            Trainee trainee = traineeOptional.get();
+
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Trainer> criteriaQuery = criteriaBuilder.createQuery(Trainer.class);
+            Root<Trainer> root = criteriaQuery.from(Trainer.class);
+
+            Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
+            Root<Training> trainingRoot = subquery.from(Training.class);
+            subquery.select(trainingRoot.get("trainer").get("id"));
+            subquery.where(criteriaBuilder.equal(trainingRoot.get("trainee"), trainee));
+
+            criteriaQuery.select(root);
+            criteriaQuery.where(criteriaBuilder.not(root.get("id").in(subquery)));
+
+            TypedQuery<Trainer> query = entityManager.createQuery(criteriaQuery);
+            return query.getResultList();
+        } else {
+            // If trainee is not present, return an empty list or handle accordingly
+            return Collections.emptyList();
+        }
+    }
 
 
 

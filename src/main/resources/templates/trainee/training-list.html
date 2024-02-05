@@ -1,6 +1,20 @@
-<!-- trainee/training-list.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trainee List</title>
+</head>
+<body>
+<form th:action="@{/trainees}" method="get">
+    <label>Search Trainee: <input type="text" name="search" th:value="${search}" /></label>
+    <input type="submit" value="Search"/>
+</form>
 
-<!-- Other content... -->
+<!-- Add this message display if searchMessage is present in the model -->
+<div th:if="${searchMessage}">
+    <p th:text="${searchMessage}" class="message"></p>
+</div>
+
 
 <h2>Trainee Training List</h2>
 
@@ -44,4 +58,30 @@
     </tbody>
 </table>
 
-<!-- Other content... -->
+
+<!-- Add this section after your existing form -->
+<h2>Available Trainers</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Trainer First Name</th>
+        <th>Trainer Last Name</th>
+        <th>Trainer Training Type</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate over the list of trainers that are not assigned to the trainee -->
+    <tr th:each="trainer : ${availableTrainers}">
+        <td th:text="${trainer.firstName}"></td>
+        <td th:text="${trainer.lastName}"></td>
+        <td th:text="${trainer.trainingType != null} ? ${trainer.trainingType.trainingTypeName} : ''"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+
+</body>
+</html>
+
+

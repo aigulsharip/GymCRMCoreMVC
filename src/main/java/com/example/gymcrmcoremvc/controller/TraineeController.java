@@ -1,8 +1,10 @@
 package com.example.gymcrmcoremvc.controller;
 
 import com.example.gymcrmcoremvc.entity.Trainee;
+import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.service.TraineeService;
+import com.example.gymcrmcoremvc.service.TrainerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,9 @@ public class TraineeController {
 
     @Autowired
     private TraineeService traineeService;
+
+    @Autowired
+    private TrainerService trainerService;
 
 //    @GetMapping
 //    public String getAllTrainees(Model model) {
@@ -129,6 +134,23 @@ public class TraineeController {
         return "redirect:/trainees";
     }
 
+//    @GetMapping("/training-list")
+//    public String getTraineeTrainingList(
+//            @RequestParam(required = false) String username,
+//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+//            @RequestParam(required = false) String trainerName,
+//            @RequestParam(required = false) String trainingTypeName,
+//            Model model
+//    ) {
+//        List<Training> trainingList = traineeService.getTraineeTrainingList(username, fromDate, toDate, trainerName, trainingTypeName);
+//        model.addAttribute("trainingList", trainingList);
+//        List<Trainee> trainees = traineeService.getAllTrainees();
+//        model.addAttribute("trainees", trainees);
+//        model.addAttribute("trainee", new Trainee());  // Add an empty trainee object for binding
+//        return "trainee/training-list";
+//    }
+
     @GetMapping("/training-list")
     public String getTraineeTrainingList(
             @RequestParam(required = false) String username,
@@ -140,11 +162,25 @@ public class TraineeController {
     ) {
         List<Training> trainingList = traineeService.getTraineeTrainingList(username, fromDate, toDate, trainerName, trainingTypeName);
         model.addAttribute("trainingList", trainingList);
+
+        // Get all trainees for the dropdown
         List<Trainee> trainees = traineeService.getAllTrainees();
         model.addAttribute("trainees", trainees);
         model.addAttribute("trainee", new Trainee());  // Add an empty trainee object for binding
+        model.addAttribute("trainer", new Trainer());
+
+        Optional<Trainee> trainee = traineeService.getTraineeByUsername(username);
+
+
+        // Get the list of trainers not assigned to the trainee
+        List<Trainer> availableTrainers = trainerService.getAvailableTrainersByTrainee(trainee  );
+
+        // Add the list of available trainers to the model
+        model.addAttribute("availableTrainers", availableTrainers);
+
         return "trainee/training-list";
     }
+
 
 
 

@@ -24,7 +24,6 @@
         <th>First Name</th>
         <th>Last Name</th>
         <th>Username</th>
-        <th>Password</th>
         <th>Active</th>
         <th>Date of Birth</th>
         <th>Address</th>
@@ -37,14 +36,11 @@
         <td th:text="${trainee.firstName}"></td>
         <td th:text="${trainee.lastName}"></td>
         <td th:text="${trainee.username}"></td>
-        <td th:text="${trainee.password}"></td>
         <td th:text="${trainee.isActive}"></td>
         <td th:text="${trainee.dateOfBirth}"></td>
         <td th:text="${trainee.address}"></td>
         <td>
-            <a th:href="@{/trainees/profile/{username}(username=${trainee.username})}">View Profile</a>
-
-            <a th:href="@{/trainees/edit/{id}(id=${trainee.id})}">Edit</a>
+            <a th:href="@{/trainees/edit/{id}(id=${trainee.id})}">View Profile</a>
             <a th:href="@{/trainees/delete/{id}(id=${trainee.id})}">Delete</a>
         </td>
         <td>

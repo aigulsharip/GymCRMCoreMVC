@@ -14,8 +14,7 @@
     <label>First Name: <input type="text" th:field="*{firstName}" required/></label><br>
     <label>Last Name: <input type="text" th:field="*{lastName}" required/></label><br>
     <label>Username: <input type="text" th:field="*{username}" required/></label><br>
-<!--    <label>Password: <input type="password" th:field="*{password}" required/></label><br>-->
-<!--    <label>Active: <input type="text" th:field="*{isActive}" required/></label><br>-->
+    <label>Password: <input type="text" th:field="*{password}" required/></label><br>
     <label for="isActive">Active:</label>
     <input type="checkbox" th:field="*{isActive}" /><br>
 
@@ -24,6 +23,23 @@
 
     <input type="submit" value="Edit"/>
 </form>
+
+<h3>Change Password</h3>
+<form th:action="@{'/trainees/profile/' + ${trainee.username} + '/change-password'}" method="post">
+    <label>New Password: <input type="password" name="newPassword" required/></label>
+    <input type="submit" value="Change Password"/>
+</form>
+
+<div th:if="${param.successMessage}">
+    <p style="color: green;" th:text="${param.successMessage}"></p>
+</div>
+
+<!-- Display error message if present -->
+<div th:if="${param.errorMessage}">
+    <p style="color: red;" th:text="${param.errorMessage}"></p>
+</div>
+
+
 
 <a href="/trainees">Back to Trainee List</a>
 

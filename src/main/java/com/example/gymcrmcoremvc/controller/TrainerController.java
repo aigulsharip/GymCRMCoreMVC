@@ -36,7 +36,7 @@ public class TrainerController {
             if (trainer.isPresent()) {
                 // If a trainee is found, display its profile
                 model.addAttribute("trainer", trainer.get());
-                return "trainer/profile";
+                return "trainer/edit";
             } else {
                 // If no trainee is found, display the list with a message
                 trainers = trainerService.getAllTrainers();
@@ -95,7 +95,7 @@ public class TrainerController {
 
         if (trainer.isPresent()) {
             model.addAttribute("trainer", trainer.get());
-            return "trainer/profile";
+            return "trainer/edit";
         } else {
             // Handle the case where the trainee with the given username is not found
             return "redirect:/trainers"; // Redirect to the trainee list or another appropriate page
@@ -104,6 +104,7 @@ public class TrainerController {
 
     @PostMapping("/profile/{username}/change-password")
     public String changePassword(@PathVariable String username, @RequestParam String newPassword, Model model) {
+        Trainer trainer = trainerService.getTrainerByUsername(username).orElse(null);
         try {
             trainerService.updateTrainerPassword(username, newPassword);
             model.addAttribute("successMessage", "Password changed successfully!");
@@ -111,7 +112,9 @@ public class TrainerController {
             model.addAttribute("errorMessage", "Failed to change password. Please try again.");
         }
 
-        return "redirect:/trainers/profile/" + username + "?successMessage=Password changed successfully!";
+        return "redirect:/trainers/edit/" + trainer.getId() + "?successMessage=Password changed successfully!";
+
+
     }
 
     @GetMapping("/activate/{id}")

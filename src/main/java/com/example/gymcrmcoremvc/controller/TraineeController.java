@@ -43,7 +43,7 @@ public class TraineeController {
             if (trainee.isPresent()) {
                 // If a trainee is found, display its profile
                 model.addAttribute("trainee", trainee.get());
-                return "trainee/profile";
+                return "trainee/edit";
             } else {
                 // If no trainee is found, display the list with a message
                 trainees = traineeService.getAllTrainees();
@@ -98,7 +98,7 @@ public class TraineeController {
 
         if (trainee.isPresent()) {
             model.addAttribute("trainee", trainee.get());
-            return "trainee/profile";
+            return "trainee/edit";
         } else {
             // Handle the case where the trainee with the given username is not found
             return "redirect:/trainees"; // Redirect to the trainee list or another appropriate page
@@ -107,12 +107,13 @@ public class TraineeController {
 
     @PostMapping("/profile/{username}/change-password")
     public String changePassword(@PathVariable String username, @RequestParam String newPassword, Model model) {
+        Trainee trainee = traineeService.getTraineeByUsername(username).orElse(null);
         try {
             traineeService.updateTraineePassword(username, newPassword);
-            return "redirect:/trainees/profile/" + username.toLowerCase() + "?successMessage=Password changed successfully";
+            return "redirect:/trainees/edit/" + trainee.getId() + "?successMessage=Password changed successfully";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Failed to change password. Please try again.");
-            return "redirect:/trainees/profile/" + username.toLowerCase() + "?errorMessage=Failed to change password. Please try again.";
+            return "redirect:/trainees/edit/" + trainee.getId() + "?errorMessage=Failed to change password. Please try again.";
         }
     }
 

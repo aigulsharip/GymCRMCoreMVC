@@ -122,10 +122,18 @@ public class TraineeService {
 //            throw new EntityNotFoundException("Trainee with id " + id + " not found");
 //        }
 //    }
+//    }
+    @Transactional
+    public void deleteTrainee(Long traineeId) {
+        Trainee trainee = traineeRepository.findById(traineeId)
+                .orElseThrow(() -> new EntityNotFoundException("Trainee not found with id: " + traineeId));
 
-    public void deleteTrainee(Long id) {
-        log.info("Deleting trainee with ID: {}", id);
-        traineeRepository.deleteById(id);
+        List<Training> trainings = trainingRepository.findByTraineeId(traineeId);
+        for (Training training : trainings) {
+            trainingRepository.delete(training);
+        }
+
+        traineeRepository.delete(trainee);
     }
 
     public Optional<Trainee> getTraineeByUsername(String username) {

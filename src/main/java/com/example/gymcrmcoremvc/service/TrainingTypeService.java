@@ -24,4 +24,8 @@ public class TrainingTypeService {
         return trainingTypeRepository.findAll();
     }
 
+    public Optional<TrainingType> getTrainingTypeById(Long id) {
+        return trainingTypeRepository.findById(id);
+    }
+
 }

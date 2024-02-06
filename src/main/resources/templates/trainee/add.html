@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Trainee</title>
+    <style>
+        .error {
+            color: red;
+            font-size: small;
+        }
+    </style>
 </head>
 <body>
 
@@ -10,10 +16,15 @@
 
 <form th:object="${trainee}" th:action="@{/trainees/add}" method="post">
     <label>First Name: <input type="text" th:field="*{firstName}" required/></label><br>
+    <span th:each="error : ${errors}" th:if="${error.field == 'firstName'}" class="error" th:text="${error.defaultMessage}"></span>
+    <br>
     <label>Last Name: <input type="text" th:field="*{lastName}" required/></label><br>
+    <span th:each="error : ${errors}" th:if="${error.field == 'lastName'}" class="error" th:text="${error.defaultMessage}"></span>
+    <br>
     <label>Date of Birth: <input type="date" th:field="*{dateOfBirth}"/></label><br>
+    <span th:each="error : ${errors}" th:if="${error.field == 'dateOfBirth'}" class="error" th:text="${error.defaultMessage}"></span>
+    <br>
     <label>Address: <input type="text" th:field="*{address}"/></label><br>
-
     <input type="submit" value="Add"/>
 </form>
 

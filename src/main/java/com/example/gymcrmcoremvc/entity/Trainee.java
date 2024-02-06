@@ -2,6 +2,7 @@ package com.example.gymcrmcoremvc.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class Trainee {
     private Boolean isActive;
 
     @Column(name = "date_of_birth")
+    @Past(message = "Birthday should be in the past")
     private LocalDate dateOfBirth;
 
     @Column(name = "address")

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -60,11 +61,23 @@ public class TraineeController {
         return "trainee/add";
     }
 
+//    @PostMapping("/add")
+//    public String addTrainee(@Valid @ModelAttribute Trainee trainee) {
+//        traineeService.saveTrainee(trainee);
+//        return "redirect:/trainees";
+//    }
+
     @PostMapping("/add")
-    public String addTrainee(@Valid @ModelAttribute Trainee trainee) {
+    public String addTrainee(@Valid @ModelAttribute Trainee trainee, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("trainee", trainee);
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "trainee/add"; // Assuming trainee_form is your form view
+        }
         traineeService.saveTrainee(trainee);
         return "redirect:/trainees";
     }
+
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {

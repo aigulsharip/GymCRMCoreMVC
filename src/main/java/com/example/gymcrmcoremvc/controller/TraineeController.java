@@ -5,7 +5,6 @@ import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -13,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -32,15 +32,11 @@ public class TraineeController {
         List<Trainee> trainees;
 
         if (search != null && !search.isEmpty()) {
-            // Perform a search based on the provided username
             Optional<Trainee> trainee = traineeService.getTraineeByUsername(search);
-
             if (trainee.isPresent()) {
-                // If a trainee is found, display its profile
                 model.addAttribute("trainee", trainee.get());
                 return "trainee/edit";
             } else {
-                // If no trainee is found, display the list with a message
                 trainees = traineeService.getAllTrainees();
                 model.addAttribute("trainees", trainees);
                 model.addAttribute("search", search);
@@ -48,7 +44,6 @@ public class TraineeController {
                 return "trainee/list";
             }
         } else {
-            // If no search criteria provided, display the list of all trainees
             trainees = traineeService.getAllTrainees();
             model.addAttribute("trainees", trainees);
             return "trainee/list";
@@ -61,12 +56,6 @@ public class TraineeController {
         return "trainee/add";
     }
 
-//    @PostMapping("/add")
-//    public String addTrainee(@Valid @ModelAttribute Trainee trainee) {
-//        traineeService.saveTrainee(trainee);
-//        return "redirect:/trainees";
-//    }
-
     @PostMapping("/add")
     public String addTrainee(@Valid @ModelAttribute Trainee trainee, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -77,7 +66,6 @@ public class TraineeController {
         traineeService.saveTrainee(trainee);
         return "redirect:/trainees";
     }
-
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
@@ -102,12 +90,10 @@ public class TraineeController {
     @GetMapping("/profile/{username}")
     public String viewTraineeProfile(@PathVariable String username, Model model) {
         Optional<Trainee> trainee = traineeService.getTraineeByUsername(username);
-
         if (trainee.isPresent()) {
             model.addAttribute("trainee", trainee.get());
             return "trainee/edit";
         } else {
-            // Handle the case where the trainee with the given username is not found
             return "redirect:/trainees"; // Redirect to the trainee list or another appropriate page
         }
     }
@@ -147,22 +133,14 @@ public class TraineeController {
     ) {
         List<Training> trainingList = traineeService.getTraineeTrainingList(username, fromDate, toDate, trainerName, trainingTypeName);
         model.addAttribute("trainingList", trainingList);
-
-        // Get all trainees for the dropdown
         List<Trainee> trainees = traineeService.getAllTrainees();
         model.addAttribute("trainees", trainees);
         model.addAttribute("trainee", new Trainee());  // Add an empty trainee object for binding
         model.addAttribute("trainer", new Trainer());
 
         Optional<Trainee> trainee = traineeService.getTraineeByUsername(username);
-
-
-        // Get the list of trainers not assigned to the trainee
-        List<Trainer> availableTrainers = trainerService.getAvailableTrainersByTrainee(trainee  );
-
-        // Add the list of available trainers to the model
+        List<Trainer> availableTrainers = trainerService.getAvailableTrainersByTrainee(trainee);
         model.addAttribute("availableTrainers", availableTrainers);
-
         return "trainee/training-list";
     }
 

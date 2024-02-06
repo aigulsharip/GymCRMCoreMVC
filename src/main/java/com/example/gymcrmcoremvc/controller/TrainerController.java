@@ -1,6 +1,5 @@
 package com.example.gymcrmcoremvc.controller;
 
-import com.example.gymcrmcoremvc.entity.Trainee;
 import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.entity.TrainingType;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 @Controller
 @RequestMapping("/trainers")
 public class TrainerController {
@@ -30,15 +30,12 @@ public class TrainerController {
         List<Trainer> trainers;
 
         if (search != null && !search.isEmpty()) {
-            // Perform a search based on the provided username
             Optional<Trainer> trainer = trainerService.getTrainerByUsername(search);
 
             if (trainer.isPresent()) {
-                // If a trainee is found, display its profile
                 model.addAttribute("trainer", trainer.get());
                 return "trainer/edit";
             } else {
-                // If no trainee is found, display the list with a message
                 trainers = trainerService.getAllTrainers();
                 model.addAttribute("trainers", trainers);
                 model.addAttribute("search", search);
@@ -46,7 +43,6 @@ public class TrainerController {
                 return "trainer/list";
             }
         } else {
-            // If no search criteria provided, display the list of all trainees
             trainers = trainerService.getAllTrainers();
             model.addAttribute("trainers", trainers);
             return "trainer/list";
@@ -97,7 +93,6 @@ public class TrainerController {
             model.addAttribute("trainer", trainer.get());
             return "trainer/edit";
         } else {
-            // Handle the case where the trainee with the given username is not found
             return "redirect:/trainers"; // Redirect to the trainee list or another appropriate page
         }
     }
@@ -113,38 +108,13 @@ public class TrainerController {
         }
 
         return "redirect:/trainers/edit/" + trainer.getId() + "?successMessage=Password changed successfully!";
-
-
     }
 
-    @GetMapping("/activate/{id}")
-    public String activateTrainer(@PathVariable Long id) {
-        trainerService.updateTrainerStatus(id, true);
+    @GetMapping("/toggle-status/{id}")
+    public String toggleTraineeStatus(@PathVariable Long id) {
+        trainerService.toggleTrainerStatus(id);
         return "redirect:/trainers";
     }
-
-    @GetMapping("/deactivate/{id}")
-    public String deactivateTrainer(@PathVariable Long id) {
-        trainerService.updateTrainerStatus(id, false);
-        return "redirect:/trainers";
-    }
-
-//    @GetMapping("/training-list")
-//    public String getTrainerTrainingList(
-//            @RequestParam(required = false) String username,
-//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
-//            @RequestParam(required = false) String trainerName,
-//            @RequestParam(required = false) String trainingTypeName,
-//            Model model
-//    ) {
-//        List<Training> trainingList = trainerService.getTrainerTrainingList(username, fromDate, toDate, trainerName, trainingTypeName);
-//        model.addAttribute("trainingList", trainingList);
-//        List<Trainer> trainers = trainerService.getAllTrainers();
-//        model.addAttribute("trainers", trainers);
-//        model.addAttribute("trainer", new Trainer());  // Add an empty trainer object for binding
-//        return "trainer/training-list";
-//    }
 
     @GetMapping("/training-list")
     public String getTrainerTrainingList(

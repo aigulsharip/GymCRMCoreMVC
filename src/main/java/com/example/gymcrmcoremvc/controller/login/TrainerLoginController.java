@@ -30,20 +30,13 @@ public class TrainerLoginController {
         String username = trainer.getUsername();
         String password = trainer.getPassword();
 
-        // Perform login.html authentication
         Optional<Trainer> authenticatedTrainer = trainerLoginService.login(username, password);
 
         if (authenticatedTrainer.isPresent()) {
-            // Successful login.html
             Trainer loggedInTrainer = authenticatedTrainer.get();
-
-            // Store the Trainer ID in the session
             session.setAttribute("loggedInTrainerId", loggedInTrainer.getId());
-
-            // Redirect to the Trainer's edit page
             return "redirect:/trainers/edit/" + loggedInTrainer.getId();
         } else {
-            // Failed login.html
             model.addAttribute("error", "Invalid username or password");
             return "trainer/login.html";
         }

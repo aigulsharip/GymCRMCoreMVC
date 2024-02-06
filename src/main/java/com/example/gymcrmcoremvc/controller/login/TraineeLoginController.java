@@ -31,20 +31,13 @@ public class TraineeLoginController {
         String username = trainee.getUsername();
         String password = trainee.getPassword();
 
-        // Perform login.html authentication
         Optional<Trainee> authenticatedTrainee = traineeLoginService.login(username, password);
 
         if (authenticatedTrainee.isPresent()) {
-            // Successful login.html
             Trainee loggedInTrainee = authenticatedTrainee.get();
-
-            // Store the Trainee ID in the session
             session.setAttribute("loggedInTraineeId", loggedInTrainee.getId());
-
-            // Redirect to the Trainee's edit page
             return "redirect:/trainees/edit/" + loggedInTrainee.getId();
         } else {
-            // Failed login.html
             model.addAttribute("error", "Invalid username or password");
             return "trainee/login";
         }

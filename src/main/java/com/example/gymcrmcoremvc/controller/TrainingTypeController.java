@@ -21,7 +21,7 @@ public class TrainingTypeController {
     public String getAllTrainingTypes(Model model) {
         List<TrainingType> trainingTypes = trainingTypeService.getAllTrainingTypes();
         model.addAttribute("trainingTypes", trainingTypes);
-        return "trainingtype/list";
+        return "training-type/list";
     }
 }
 

@@ -6,6 +6,7 @@ import com.example.gymcrmcoremvc.repository.TrainingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,20 +22,24 @@ public class TrainingService {
         this.trainingRepository = trainingRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Training> getAllTrainings() {
         log.info("Fetching all trainings");
         return trainingRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Optional<Training> getTrainingById(Long id) {
         return trainingRepository.findById(id);
     }
 
+    @Transactional
     public Training saveTraining(Training training) {
         log.info("Saving new training: {}", training);
         return trainingRepository.save(training);
     }
 
+    @Transactional
     public Training updateTraining(Long id, Training updatedTraining) {
         log.info("Updating training with ID {}: {}", id, updatedTraining);
         Optional<Training> existingTrainingOptional = trainingRepository.findById(id);
@@ -61,7 +66,7 @@ public class TrainingService {
             return null;
         }
     }
-
+    @Transactional
     public void deleteTraining(Long id) {
         log.info("Deleting training with ID: {}", id);
         trainingRepository.deleteById(id);

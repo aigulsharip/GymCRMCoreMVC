@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -32,15 +33,18 @@ public class TrainerService {
         this.trainingTypeService = trainingTypeService;
     }
 
+    @Transactional(readOnly = true)
     public List<Trainer> getAllTrainers() {
         log.info("Fetching all trainers");
         return trainerRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Optional<Trainer> getTrainerById(Long id) {
         return trainerRepository.findById(id);
     }
 
+    @Transactional
     public Trainer saveTrainer(Trainer trainer) {
         log.info("Saving new trainer: {}", trainer);
         trainer.setUsername(calculateUsername(trainer.getFirstName(), trainer.getLastName()));
@@ -50,6 +54,7 @@ public class TrainerService {
         return trainerRepository.save(trainer);
     }
 
+    @Transactional
     public Trainer updateTrainer(Long id, Trainer updatedTrainer) {
         log.info("Updating trainer with ID {}: {}", id, updatedTrainer);
         Optional<Trainer> existingTrainerOptional = trainerRepository.findById(id);
@@ -73,15 +78,18 @@ public class TrainerService {
         }
     }
 
+    @Transactional
     public void deleteTrainer(Long id) {
         log.info("Deleting trainer with ID: {}", id);
         trainerRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Trainer> getTrainerByUsername(String username) {
         return trainerRepository.findByUsername(username);
     }
 
+    @Transactional
     public void updateTrainerPassword(String username, String newPassword) {
         Optional<Trainer> trainerOptional = trainerRepository.findByUsername(username);
 
@@ -94,6 +102,7 @@ public class TrainerService {
         }
     }
 
+    @Transactional
     public void updateTrainerStatus(Long id, boolean isActive) {
         Optional<Trainer> trainerOptional = trainerRepository.findById(id);
 
@@ -107,27 +116,33 @@ public class TrainerService {
         }
     }
 
+    @Transactional
+    public void toggleTrainerStatus(Long traineeId) {
+        Optional<Trainer> optionalTrainer = trainerRepository.findById(traineeId);
+
+        optionalTrainer.ifPresent(trainee -> {
+            trainee.setIsActive(!trainee.getIsActive());
+            trainerRepository.save(trainee);
+        });
+    }
+
+    @Transactional(readOnly = true)
     public List<Training> getTrainerTrainingList(String username, LocalDate fromDate, LocalDate toDate, String traineeName, String trainingTypeName) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Training> criteriaQuery = criteriaBuilder.createQuery(Training.class);
         Root<Training> root = criteriaQuery.from(Training.class);
-
         List<Predicate> predicates = new ArrayList<>();
 
-        // Add username condition
         predicates.add(criteriaBuilder.equal(root.join("trainer").get("username"), username));
 
-        // Add fromDate condition if provided
         if (fromDate != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("trainingDate"), fromDate));
         }
 
-        // Add toDate condition if provided
         if (toDate != null) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("trainingDate"), toDate));
         }
 
-        // Add traineeName condition if provided
         if (traineeName != null && !traineeName.isEmpty()) {
             Join<Training, Trainer> trainerJoin = root.join("trainee");
             predicates.add(criteriaBuilder.or(
@@ -136,7 +151,6 @@ public class TrainerService {
             ));
         }
 
-        // Add trainingTypeName condition if provided
         if (trainingTypeName != null && !trainingTypeName.isEmpty()) {
             predicates.add(criteriaBuilder.like(root.join("trainingType").get("trainingTypeName"), "%" + trainingTypeName + "%"));
         }
@@ -147,6 +161,7 @@ public class TrainerService {
         return query.getResultList();
     }
 
+    @Transactional
     public List<Trainer> getAvailableTrainersByTrainee(Optional<Trainee> traineeOptional) {
         if (traineeOptional.isPresent()) {
             Trainee trainee = traineeOptional.get();
@@ -170,7 +185,6 @@ public class TrainerService {
             return Collections.emptyList();
         }
     }
-
 
 
     private String calculateUsername(String firstName, String lastName) {

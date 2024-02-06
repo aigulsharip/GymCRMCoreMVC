@@ -44,8 +44,10 @@
             <a th:href="@{/trainers/delete/{id}(id=${trainer.id})}">Delete</a>
         </td>
         <td>
-            <a th:href="@{/trainers/activate/{id}(id=${trainer.id})}">Activate</a>
-            <a th:href="@{/trainers/deactivate/{id}(id=${trainer.id})}">Deactivate</a>
+            <a th:href="@{/trainers/toggle-status/{id}(id=${trainer.id})}">
+                <span th:if="${trainer.isActive}">Deactivate</span>
+                <span th:unless="${trainer.isActive}">Activate</span>
+            </a>
         </td>
     </tr>
     </tbody>

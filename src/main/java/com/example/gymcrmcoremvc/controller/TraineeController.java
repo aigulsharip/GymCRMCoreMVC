@@ -5,7 +5,6 @@ import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,11 +20,14 @@ import java.util.Optional;
 @RequestMapping("/trainees")
 public class TraineeController {
 
-    @Autowired
-    private TraineeService traineeService;
+    private final TraineeService traineeService;
 
-    @Autowired
-    private TrainerService trainerService;
+    private final TrainerService trainerService;
+
+    public TraineeController(TraineeService traineeService, TrainerService trainerService) {
+        this.traineeService = traineeService;
+        this.trainerService = trainerService;
+    }
 
     @GetMapping
     public String getAllTrainees(Model model, @RequestParam(name = "search", required = false) String search) {

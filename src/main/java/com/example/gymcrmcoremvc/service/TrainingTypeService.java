@@ -24,28 +24,4 @@ public class TrainingTypeService {
         return trainingTypeRepository.findAll();
     }
 
-    public Optional<TrainingType> getTrainingTypeById(Long id) {
-        return trainingTypeRepository.findById(id);
-    }
-
-    public TrainingType saveTrainingType(TrainingType trainingType) {
-        return trainingTypeRepository.save(trainingType);
-    }
-
-    public TrainingType updateTrainingType(Long id, TrainingType updatedTrainingType) {
-        Optional<TrainingType> existingTrainingTypeOptional = trainingTypeRepository.findById(id);
-
-        if (existingTrainingTypeOptional.isPresent()) {
-            TrainingType existingTrainingType = existingTrainingTypeOptional.get();
-            existingTrainingType.setTrainingTypeName(updatedTrainingType.getTrainingTypeName());
-
-            return trainingTypeRepository.save(existingTrainingType);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "TrainingType not found");
-        }
-    }
-
-    public void deleteTrainingType(Long id) {
-        trainingTypeRepository.deleteById(id);
-    }
 }

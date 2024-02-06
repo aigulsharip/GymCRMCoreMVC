@@ -23,36 +23,5 @@ public class TrainingTypeController {
         model.addAttribute("trainingTypes", trainingTypes);
         return "trainingtype/list";
     }
-
-    @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("trainingType", new TrainingType());
-        return "trainingtype/create";
-    }
-
-    @PostMapping("/create")
-    public String createTrainingType(@ModelAttribute("trainingType") TrainingType trainingType) {
-        trainingTypeService.saveTrainingType(trainingType);
-        return "redirect:/training-types";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") Long id, Model model) {
-        Optional<TrainingType> trainingType = trainingTypeService.getTrainingTypeById(id);
-        model.addAttribute("trainingType", trainingType.orElse(null));
-        return "trainingtype/edit";
-    }
-
-    @PostMapping("/edit/{id}")
-    public String editTrainingType(@PathVariable("id") Long id, @ModelAttribute("trainingType") TrainingType trainingType) {
-        trainingTypeService.saveTrainingType(trainingType);
-        return "redirect:/training-types";
-    }
-
-    @GetMapping("/delete/{id}")
-    public String deleteTrainingType(@PathVariable("id") Long id) {
-        trainingTypeService.deleteTrainingType(id);
-        return "redirect:/training-types";
-    }
 }
 

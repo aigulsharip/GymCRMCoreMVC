@@ -2,88 +2,116 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Trainee List</title>
+    <title>Trainee Training List</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 50px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+        }
+        th {
+            background-color: #212529;
+            color: #fff;
+        }
+        input[type="submit"] {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-<form th:action="@{/trainees}" method="get">
-    <label>Search Trainee: <input type="text" name="search" th:value="${search}" /></label>
-    <input type="submit" value="Search"/>
-</form>
 
-<!-- Add this message display if searchMessage is present in the model -->
-<div th:if="${searchMessage}">
-    <p th:text="${searchMessage}" class="message"></p>
+<div class="container">
+    <h2>Trainee Training List</h2>
+
+    <form th:action="@{/trainees/training-list}" method="get">
+        <div class="mb-3">
+            <label class="form-label">Trainee Username:</label>
+            <select class="form-select" th:field="*{trainee.username}" required>
+                <option th:each="trainee : ${trainees}" th:value="${trainee.username}" th:text="${trainee.username}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">From Date:</label>
+            <input type="date" class="form-control" name="fromDate" th:value="${fromDate}"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">To Date:</label>
+            <input type="date" class="form-control" name="toDate" th:value="${toDate}"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Trainer Name:</label>
+            <input type="text" class="form-control" name="trainerName" th:value="${trainerName}"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Training Type:</label>
+            <input type="text" class="form-control" name="trainingTypeName" th:value="${trainingTypeName}"/>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Search"/>
+    </form>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Trainee Name</th>
+            <th>Trainer Name</th>
+            <th>Training Type</th>
+            <th>Training Name</th>
+            <th>Training Date</th>
+            <th>Training Duration</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="training : ${trainingList}">
+            <td th:text="${training.trainee.firstName + ' ' + training.trainee.lastName}"></td>
+            <td th:text="${training.trainer.firstName + ' ' + training.trainer.lastName}"></td>
+            <td th:text="${training.trainingType.trainingTypeName}"></td>
+            <td th:text="${training.trainingName}"></td>
+            <td th:text="${training.trainingDate}"></td>
+            <td th:text="${training.trainingDuration}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Available Trainers</h2>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Trainer First Name</th>
+            <th>Trainer Last Name</th>
+            <th>Trainer Training Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="trainer : ${availableTrainers}">
+            <td th:text="${trainer.firstName}"></td>
+            <td th:text="${trainer.lastName}"></td>
+            <td th:text="${trainer.trainingType != null} ? ${trainer.trainingType.trainingTypeName} : ''"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
-
-<h2>Trainee Training List</h2>
-
-<form th:action="@{/trainees/training-list}" method="get">
-
-    <label>Trainee Username:
-        <select th:field="*{trainee.username}" required>
-            <option th:each="trainee : ${trainees}" th:value="${trainee.username}" th:text="${trainee.username}"></option>
-        </select>
-    </label><br>
-
-    <label>From Date: <input type="date" name="fromDate" th:value="${fromDate}" /></label><br>
-    <label>To Date: <input type="date" name="toDate" th:value="${toDate}" /></label><br>
-    <label>Trainer Name: <input type="text" name="trainerName" th:value="${trainerName}" /></label><br>
-    <label>Training Type: <input type="text" name="trainingTypeName" th:value="${trainingTypeName}" /></label><br>
-
-    <input type="submit" value="Search"/>
-</form>
-<br>
-<br>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Trainee Name</th>
-        <th>Trainer Name </th>
-        <th>Training Type</th>
-        <th>Training Name</th>
-        <th>Training Date</th>
-        <th>Training Duration</th>
-        <!-- Add other columns as needed -->
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="training : ${trainingList}">
-        <td th:text="${training.trainee.firstName + ' ' + training.trainee.lastName}"></td>
-        <td th:text="${training.trainer.firstName + ' ' + training.trainer.lastName}"></td>
-        <td th:text="${training.trainingType.trainingTypeName}"></td>
-        <td th:text="${training.trainingName}"></td>
-        <td th:text="${training.trainingDate}"></td>
-        <td th:text="${training.trainingDuration}"></td>
-        <!-- Add other columns as needed -->
-    </tr>
-    </tbody>
-</table>
-
-
-<!-- Add this section after your existing form -->
-<h2>Available Trainers</h2>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Trainer First Name</th>
-        <th>Trainer Last Name</th>
-        <th>Trainer Training Type</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Iterate over the list of trainers that are not assigned to the trainee -->
-    <tr th:each="trainer : ${availableTrainers}">
-        <td th:text="${trainer.firstName}"></td>
-        <td th:text="${trainer.lastName}"></td>
-        <td th:text="${trainer.trainingType != null} ? ${trainer.trainingType.trainingTypeName} : ''"></td>
-    </tr>
-    </tbody>
-</table>
-
-
-
+<!-- Bootstrap JS (Optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-

@@ -3,20 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Trainer Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="submit"] {
+            width: 100%;
+        }
+        p.error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Trainer Login</h2>
+<div class="container">
+    <h2>Trainer Login</h2>
 
-<form th:object="${trainer}" th:action="@{/trainer-login/authenticate}" method="post">
-    <label>Username: <input type="text" th:field="*{username}" required/></label><br>
-    <label>Password: <input type="password" th:field="*{password}" required/></label><br>
+    <form th:object="${trainer}" th:action="@{/trainer-login/authenticate}" method="post">
+        <div class="mb-3">
+            <label class="form-label">Username:</label>
+            <input type="text" class="form-control" th:field="*{username}" required/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password:</label>
+            <input type="password" class="form-control" th:field="*{password}" required/>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Login"/>
+    </form>
 
-    <input type="submit" value="Login"/>
-</form>
+    <p th:if="${error}" class="error-message" th:text="${error}"></p>
+</div>
 
-<p th:if="${error}" style="color: red" th:text="${error}"></p>
-
-
+<!-- Bootstrap JS (Optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

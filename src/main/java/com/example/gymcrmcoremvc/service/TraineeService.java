@@ -1,8 +1,10 @@
 package com.example.gymcrmcoremvc.service;
 
-import com.example.gymcrmcoremvc.entity.Trainee;
-import com.example.gymcrmcoremvc.entity.Trainer;
-import com.example.gymcrmcoremvc.entity.Training;
+import com.example.gymcrmcoremvc.entity.*;
+import com.example.gymcrmcoremvc.entity.trainee.Trainee;
+import com.example.gymcrmcoremvc.entity.trainee.TraineeProfileResponse;
+import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationRequest;
+import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationResponse;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import com.example.gymcrmcoremvc.repository.TrainingRepository;
 import jakarta.persistence.EntityManager;
@@ -11,6 +13,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +37,50 @@ public class TraineeService {
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
     }
+
+    public TraineeRegistrationResponse registerTrainee (TraineeRegistrationRequest traineeRegistrationRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        Trainee trainee = modelMapper.map(traineeRegistrationRequest, Trainee.class);
+        trainee.setUsername(calculateUsername(trainee.getFirstName(), trainee.getLastName()));
+        trainee.setPassword(generatePassword());
+        trainee.setIsActive(true);
+        trainee = traineeRepository.save(trainee);
+        return modelMapper.map(trainee, TraineeRegistrationResponse.class);
+    }
+
+    public Optional<Trainee> authenticateTrainee(String username, String password) {
+        // Check if the provided username and password match any trainee in the database
+        return traineeRepository.findByUsernameAndPassword(username, password);
+    }
+
+    public TraineeProfileResponse getTraineeProfile(String username) {
+        // Retrieve trainee from the database using username
+        Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(username);
+        if (optionalTrainee.isPresent()) {
+            Trainee trainee = optionalTrainee.get();
+            // Build and return the trainee profile response
+            return new TraineeProfileResponse(trainee.getFirstName(), trainee.getLastName(),
+                    trainee.getDateOfBirth(), trainee.getAddress(),
+                    trainee.getIsActive());
+        } else {
+            return null; // Trainee not found
+        }
+    }
+
+    /*
+    @Override
+    public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
+        employeeRequest.setEmployeeId(UUID.randomUUID().toString());
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        EmployeeEntity employeeEntity = modelMapper.map(employeeRequest, EmployeeEntity.class);
+        employeeEntity =  employeeRepository.save(employeeEntity);
+
+        return modelMapper.map(employeeEntity, EmployeeResponse.class);
+    }
+
+     */
 
     @Transactional(readOnly = true)
     public List<Trainee> getAllTrainees() {

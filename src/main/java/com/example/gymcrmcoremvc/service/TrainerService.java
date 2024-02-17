@@ -1,6 +1,6 @@
 package com.example.gymcrmcoremvc.service;
 
-import com.example.gymcrmcoremvc.entity.Trainee;
+import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;

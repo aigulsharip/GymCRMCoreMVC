@@ -1,6 +1,6 @@
 package com.example.gymcrmcoremvc.service.login;
 
-import com.example.gymcrmcoremvc.entity.Trainee;
+import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

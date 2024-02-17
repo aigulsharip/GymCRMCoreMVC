@@ -1,5 +1,6 @@
 package com.example.gymcrmcoremvc.entity;
 
+import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;

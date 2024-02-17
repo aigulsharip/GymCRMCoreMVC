@@ -1,6 +1,6 @@
 package com.example.gymcrmcoremvc.service;
 
-import com.example.gymcrmcoremvc.entity.Trainee;
+import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

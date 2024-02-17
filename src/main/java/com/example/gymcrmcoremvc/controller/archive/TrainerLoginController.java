@@ -1,4 +1,4 @@
-package com.example.gymcrmcoremvc.controller.login;
+package com.example.gymcrmcoremvc.controller.archive.login;
 
 import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.service.login.TrainerLoginService;

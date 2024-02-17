@@ -1,4 +1,4 @@
-package com.example.gymcrmcoremvc.entity;
+package com.example.gymcrmcoremvc.entity.trainee;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

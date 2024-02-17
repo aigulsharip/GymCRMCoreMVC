@@ -3,6 +3,10 @@ package com.example.gymcrmcoremvc.service;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
+import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationRequest;
+import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationResponse;
+import com.example.gymcrmcoremvc.entity.trainer.TrainerRegistrationRequest;
+import com.example.gymcrmcoremvc.entity.trainer.TrainerRegistrationResponse;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +14,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +44,22 @@ public class TrainerService {
         log.info("Fetching all trainers");
         return trainerRepository.findAll();
     }
+
+    public Optional<Trainer> authenticateTrainer(String username, String password) {
+        // Check if the provided username and password match any trainee in the database
+        return trainerRepository.findByUsernameAndPassword(username, password);
+    }
+
+    public void changePassword(String username, String oldPassword, String newPassword) {
+        Optional<Trainer> authenticatedTrainer = authenticateTrainer(username, oldPassword);
+        if (authenticatedTrainer.isPresent()) {
+            Trainer trainer = authenticatedTrainer.get();
+            trainer.setPassword(newPassword);
+            trainerRepository.save(trainer);
+        }
+
+    }
+
 
     @Transactional(readOnly = true)
     public Optional<Trainer> getTrainerById(Long id) {

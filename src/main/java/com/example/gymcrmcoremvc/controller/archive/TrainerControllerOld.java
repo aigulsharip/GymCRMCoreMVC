@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/trainers")
-public class TrainerController {
+@RequestMapping("archive/trainers")
+public class TrainerControllerOld {
 
     @Autowired
     private TrainerService trainerService;

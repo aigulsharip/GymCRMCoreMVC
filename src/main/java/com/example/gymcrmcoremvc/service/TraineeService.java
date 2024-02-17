@@ -38,20 +38,16 @@ public class TraineeService {
         this.trainingRepository = trainingRepository;
     }
 
-    public TraineeRegistrationResponse registerTrainee (TraineeRegistrationRequest traineeRegistrationRequest) {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        Trainee trainee = modelMapper.map(traineeRegistrationRequest, Trainee.class);
-        trainee.setUsername(calculateUsername(trainee.getFirstName(), trainee.getLastName()));
-        trainee.setPassword(generatePassword());
-        trainee.setIsActive(true);
-        trainee = traineeRepository.save(trainee);
-        return modelMapper.map(trainee, TraineeRegistrationResponse.class);
-    }
+
 
     public Optional<Trainee> authenticateTrainee(String username, String password) {
         // Check if the provided username and password match any trainee in the database
         return traineeRepository.findByUsernameAndPassword(username, password);
+    }
+
+    public Optional<Trainee> findTraineeByUsername(String username) {
+        // Check if the provided username and password match any trainee in the database
+        return traineeRepository.findByUsername(username);
     }
 
     public TraineeProfileResponse getTraineeProfile(String username) {
@@ -68,25 +64,55 @@ public class TraineeService {
         }
     }
 
-    /*
-    @Override
-    public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
-        employeeRequest.setEmployeeId(UUID.randomUUID().toString());
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        EmployeeEntity employeeEntity = modelMapper.map(employeeRequest, EmployeeEntity.class);
-        employeeEntity =  employeeRepository.save(employeeEntity);
+    public void changePassword(String username, String oldPassword, String newPassword) {
+        Optional<Trainee> authenticatedTrainee = authenticateTrainee(username, oldPassword);
+        if (authenticatedTrainee.isPresent()) {
+            Trainee trainee = authenticatedTrainee.get();
+            trainee.setPassword(newPassword);
+            traineeRepository.save(trainee);
+        }
 
-        return modelMapper.map(employeeEntity, EmployeeResponse.class);
     }
 
-     */
+
+    public boolean deleteTraineeProfile(String username) {
+        Optional<Trainee> authenticatedTrainee = findTraineeByUsername(username);
+        if (authenticatedTrainee.isPresent()) {
+            Trainee trainee = authenticatedTrainee.get();
+            traineeRepository.delete(trainee);
+            return true; // Trainee profile deleted successfully
+        }
+        return false; // Authentication failed or trainee profile not found
+    }
 
     @Transactional(readOnly = true)
     public List<Trainee> getAllTrainees() {
         log.info("Fetching all trainees");
         return traineeRepository.findAll();
     }
+
+    private String calculateUsername(String firstName, String lastName) {
+        String baseUsername = firstName + "." + lastName;
+        String calculatedUsername = baseUsername.toLowerCase(Locale.ROOT);
+        int counter = 1;
+
+        while (traineeRepository.existsByUsername(calculatedUsername)) {
+            calculatedUsername = baseUsername + counter++;
+        }
+        return calculatedUsername;
+    }
+
+    private String generatePassword() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            int index = random.nextInt(characters.length());
+            sb.append(characters.charAt(index));
+        }
+        return sb.toString();
+    }
+
 
     @Transactional(readOnly = true)
     public Optional<Trainee> getTraineeById(Long id) {
@@ -173,27 +199,7 @@ public class TraineeService {
         }
     }
 
-    private String calculateUsername(String firstName, String lastName) {
-        String baseUsername = firstName + "." + lastName;
-        String calculatedUsername = baseUsername.toLowerCase(Locale.ROOT);
-        int counter = 1;
 
-        while (traineeRepository.existsByUsername(calculatedUsername)) {
-            calculatedUsername = baseUsername + counter++;
-        }
-        return calculatedUsername;
-    }
-
-    private String generatePassword() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 10; i++) {
-            int index = random.nextInt(characters.length());
-            sb.append(characters.charAt(index));
-        }
-        return sb.toString();
-    }
 
     @Transactional
     public void deleteTraineeByUsername(String username) {
@@ -248,6 +254,41 @@ public class TraineeService {
         TypedQuery<Training> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();
     }
+
+
+    /*
+    // Register trainee logic without modelMapper:25 lines of code
+    public TraineeRegistrationResponse registerTrainee(TraineeRegistrationRequest request) {
+        // Create Trainee entity from request
+        Trainee trainee = new Trainee();
+        trainee.setFirstName(request.getFirstName());
+        trainee.setLastName(request.getLastName());
+        trainee.setDateOfBirth(request.getDateOfBirth());
+        trainee.setAddress(request.getAddress());
+        trainee.setIsActive(true);
+        trainee.setPassword("password");
+        trainee.setUsername("username");
+
+        // Save trainee to the database
+        trainee = traineeRepository.save(trainee);
+
+        // Generate username and password
+        String username = calculateUsername(trainee.getFirstName(), trainee.getLastName());
+        String password = generatePassword();
+
+        // Update trainee with username and password
+        trainee.setUsername(username);
+        trainee.setPassword(password);
+        traineeRepository.save(trainee);
+
+        // Create registration response
+        return new TraineeRegistrationResponse(username, password);
+    }
+
+     */
+
+
+
 
 
 }

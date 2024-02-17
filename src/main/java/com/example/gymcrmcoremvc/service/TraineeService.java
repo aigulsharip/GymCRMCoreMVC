@@ -151,6 +151,17 @@ public class TraineeService {
         return traineeRepository.findAll();
     }
 
+    public void activateDeactivateTrainee(String username, boolean isActive) {
+        Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(username);
+        if (optionalTrainee.isPresent()) {
+            Trainee trainee = optionalTrainee.get();
+            trainee.setIsActive(isActive);
+            traineeRepository.save(trainee);
+        } else {
+            throw new EntityNotFoundException("Trainee not found with username: " + username);
+        }
+    }
+
     private String calculateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;
         String calculatedUsername = baseUsername.toLowerCase(Locale.ROOT);

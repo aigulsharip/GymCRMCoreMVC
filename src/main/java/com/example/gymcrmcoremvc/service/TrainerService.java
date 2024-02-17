@@ -106,9 +106,20 @@ public class TrainerService {
             traineeInfos.add(traineeInfo);
         }
         profileResponse.setTrainees(traineeInfos);
-
         return profileResponse;
     }
+
+    public void activateDeactivateTrainer(String username, boolean isActive) {
+        Optional<Trainer> optionalTrainer = trainerRepository.findByUsername(username);
+        if (optionalTrainer.isPresent()) {
+            Trainer trainer = optionalTrainer.get();
+            trainer.setIsActive(isActive);
+            trainerRepository.save(trainer);
+        } else {
+            throw new EntityNotFoundException("Trainer not found with username: " + username);
+        }
+    }
+
 
 
     @Transactional(readOnly = true)

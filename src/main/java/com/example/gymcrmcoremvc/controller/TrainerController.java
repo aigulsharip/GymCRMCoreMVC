@@ -67,6 +67,13 @@ public class TrainerController {
         }
     }
 
+    @PatchMapping("/activate-deactivate")
+    public ResponseEntity<Void> activateDeactivateTrainer(@RequestParam String username,
+                                                          @RequestParam boolean isActive) {
+        trainerService.activateDeactivateTrainer(username, isActive);
+        return ResponseEntity.ok().build();
+    }
+
 
 
 

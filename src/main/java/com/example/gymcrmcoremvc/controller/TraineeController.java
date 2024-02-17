@@ -78,5 +78,12 @@ public class TraineeController {
         }
     }
 
+    @PatchMapping("/activate-deactivate")
+    public ResponseEntity<Void> activateDeactivateTrainee(@RequestParam String username,
+                                                          @RequestParam boolean isActive) {
+        traineeService.activateDeactivateTrainee(username, isActive);
+        return ResponseEntity.ok().build();
+    }
+
 
 }

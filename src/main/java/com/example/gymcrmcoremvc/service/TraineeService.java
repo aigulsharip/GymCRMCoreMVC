@@ -7,6 +7,7 @@ import com.example.gymcrmcoremvc.entity.trainee.TraineeUpdateRequest;
 import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerInfo;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
+import com.example.gymcrmcoremvc.repository.TrainerRepository;
 import com.example.gymcrmcoremvc.repository.TrainingRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,14 +27,16 @@ import java.util.*;
 public class TraineeService {
 
     private final TraineeRepository traineeRepository;
+    private final TrainerRepository trainerRepository;
     private final TrainingRepository trainingRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    public TraineeService(TraineeRepository traineeRepository, TrainingRepository trainingRepository) {
+    public TraineeService(TraineeRepository traineeRepository, TrainerRepository trainerRepository, TrainingRepository trainingRepository) {
         this.traineeRepository = traineeRepository;
+        this.trainerRepository = trainerRepository;
         this.trainingRepository = trainingRepository;
     }
 
@@ -120,6 +123,26 @@ public class TraineeService {
             return true; // Trainee profile deleted successfully
         }
         return false; // Authentication failed or trainee profile not found
+    }
+
+    public List<TrainerInfo> getNotAssignedActiveTrainers(String username) {
+        Trainee trainee = traineeRepository.findByUsername(username).orElse(null);
+        if (trainee != null && trainee.getIsActive()) {
+            List<Trainer> allActiveTrainers = trainerRepository.findByIsActiveTrue();
+            List<TrainerInfo> notAssignedActiveTrainers = new ArrayList<>();
+            for (Trainer trainer : allActiveTrainers) {
+                if (!trainee.getTrainers().contains(trainer)) {
+                    TrainerInfo trainerInfo = new TrainerInfo();
+                    trainerInfo.setUsername(trainer.getUsername());
+                    trainerInfo.setFirstName(trainer.getFirstName());
+                    trainerInfo.setLastName(trainer.getLastName());
+                    trainerInfo.setTrainingType(trainer.getTrainingType());
+                    notAssignedActiveTrainers.add(trainerInfo);
+                }
+            }
+            return notAssignedActiveTrainers;
+        }
+        return new ArrayList<>();
     }
 
     @Transactional(readOnly = true)

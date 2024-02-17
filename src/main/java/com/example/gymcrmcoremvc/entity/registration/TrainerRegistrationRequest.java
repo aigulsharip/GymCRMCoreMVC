@@ -1,6 +1,6 @@
 package com.example.gymcrmcoremvc.entity.registration;
 
-import com.example.gymcrmcoremvc.entity.TrainingType;
+import com.example.gymcrmcoremvc.entity.trainingType.TrainingType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

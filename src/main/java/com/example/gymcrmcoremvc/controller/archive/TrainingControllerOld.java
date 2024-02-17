@@ -3,7 +3,7 @@ package com.example.gymcrmcoremvc.controller.archive;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
-import com.example.gymcrmcoremvc.entity.TrainingType;
+import com.example.gymcrmcoremvc.entity.trainingType.TrainingType;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
 import com.example.gymcrmcoremvc.service.TrainingService;
@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/trainings")
+@RequestMapping("archive/trainings")
 @Slf4j
-public class TrainingController {
+public class TrainingControllerOld {
 
     private final TrainingService trainingService;
     private final TraineeService traineeService;
@@ -28,8 +28,8 @@ public class TrainingController {
     private final TrainingTypeService trainingTypeService;
 
     @Autowired
-    public TrainingController(TrainingService trainingService, TraineeService traineeService,
-                              TrainerService trainerService, TrainingTypeService trainingTypeService) {
+    public TrainingControllerOld(TrainingService trainingService, TraineeService traineeService,
+                                 TrainerService trainerService, TrainingTypeService trainingTypeService) {
         this.trainingService = trainingService;
         this.traineeService = traineeService;
         this.trainerService = trainerService;

@@ -1,4 +1,4 @@
-package com.example.gymcrmcoremvc.entity;
+package com.example.gymcrmcoremvc.entity.trainingType;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,6 +1,7 @@
 package com.example.gymcrmcoremvc.controller;
 
 import com.example.gymcrmcoremvc.entity.trainee.*;
+import com.example.gymcrmcoremvc.entity.trainer.TrainerInfo;
 import com.example.gymcrmcoremvc.service.RegistrationLoginService;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
@@ -64,6 +65,16 @@ public class TraineeController {
             return ResponseEntity.ok("Trainee profile deleted successfully");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username");
+        }
+    }
+
+    @GetMapping("/not-assigned-trainers")
+    public ResponseEntity<List<TrainerInfo>> getNotAssignedActiveTrainers(@RequestParam String username) {
+        List<TrainerInfo> notAssignedActiveTrainers = traineeService.getNotAssignedActiveTrainers(username);
+        if (!notAssignedActiveTrainers.isEmpty()) {
+            return ResponseEntity.ok(notAssignedActiveTrainers);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

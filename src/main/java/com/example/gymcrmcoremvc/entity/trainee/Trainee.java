@@ -1,10 +1,13 @@
 package com.example.gymcrmcoremvc.entity.trainee;
 
+import com.example.gymcrmcoremvc.entity.trainer.Trainer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "trainees")
@@ -40,4 +43,8 @@ public class Trainee {
 
     @Column(name = "address")
     private String address;
+
+    @Column
+    @OneToMany
+    private List<Trainer> trainers;
 }

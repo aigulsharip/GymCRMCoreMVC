@@ -1,11 +1,11 @@
 package com.example.gymcrmcoremvc.service;
 
-import com.example.gymcrmcoremvc.entity.Trainer;
+import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
-import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationRequest;
-import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationResponse;
-import com.example.gymcrmcoremvc.entity.trainer.TrainerRegistrationRequest;
-import com.example.gymcrmcoremvc.entity.trainer.TrainerRegistrationResponse;
+import com.example.gymcrmcoremvc.entity.registration.TraineeRegistrationRequest;
+import com.example.gymcrmcoremvc.entity.registration.TraineeRegistrationResponse;
+import com.example.gymcrmcoremvc.entity.registration.TrainerRegistrationRequest;
+import com.example.gymcrmcoremvc.entity.registration.TrainerRegistrationResponse;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;
 import com.example.gymcrmcoremvc.repository.TrainingRepository;
@@ -89,6 +89,36 @@ public class RegistrationLoginService {
         }
         return sb.toString();
     }
+    /*
+    // Register trainee logic without modelMapper:25 lines of code
+    public TraineeRegistrationResponse registerTrainee(TraineeRegistrationRequest request) {
+        // Create Trainee entity from request
+        Trainee trainee = new Trainee();
+        trainee.setFirstName(request.getFirstName());
+        trainee.setLastName(request.getLastName());
+        trainee.setDateOfBirth(request.getDateOfBirth());
+        trainee.setAddress(request.getAddress());
+        trainee.setIsActive(true);
+        trainee.setPassword("password");
+        trainee.setUsername("username");
+
+        // Save trainee to the database
+        trainee = traineeRepository.save(trainee);
+
+        // Generate username and password
+        String username = calculateUsername(trainee.getFirstName(), trainee.getLastName());
+        String password = generatePassword();
+
+        // Update trainee with username and password
+        trainee.setUsername(username);
+        trainee.setPassword(password);
+        traineeRepository.save(trainee);
+
+        // Create registration response
+        return new TraineeRegistrationResponse(username, password);
+    }
+
+     */
 
 }
 

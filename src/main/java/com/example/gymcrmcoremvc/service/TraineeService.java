@@ -3,8 +3,9 @@ package com.example.gymcrmcoremvc.service;
 import com.example.gymcrmcoremvc.entity.*;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.trainee.TraineeProfileResponse;
-import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationRequest;
-import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationResponse;
+import com.example.gymcrmcoremvc.entity.trainee.TraineeUpdateRequest;
+import com.example.gymcrmcoremvc.entity.trainer.Trainer;
+import com.example.gymcrmcoremvc.entity.trainer.TrainerInfo;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import com.example.gymcrmcoremvc.repository.TrainingRepository;
 import jakarta.persistence.EntityManager;
@@ -13,8 +14,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,20 +49,6 @@ public class TraineeService {
         return traineeRepository.findByUsername(username);
     }
 
-    public TraineeProfileResponse getTraineeProfile(String username) {
-        // Retrieve trainee from the database using username
-        Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(username);
-        if (optionalTrainee.isPresent()) {
-            Trainee trainee = optionalTrainee.get();
-            // Build and return the trainee profile response
-            return new TraineeProfileResponse(trainee.getFirstName(), trainee.getLastName(),
-                    trainee.getDateOfBirth(), trainee.getAddress(),
-                    trainee.getIsActive());
-        } else {
-            return null; // Trainee not found
-        }
-    }
-
     public void changePassword(String username, String oldPassword, String newPassword) {
         Optional<Trainee> authenticatedTrainee = authenticateTrainee(username, oldPassword);
         if (authenticatedTrainee.isPresent()) {
@@ -73,6 +58,58 @@ public class TraineeService {
         }
 
     }
+
+
+    public TraineeProfileResponse getTraineeProfile(String username) {
+        Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(username);
+        if (optionalTrainee.isPresent()) {
+            Trainee trainee = optionalTrainee.get();
+            return buildTraineeProfileResponse(trainee);
+        }
+        return null;
+    }
+
+
+    public TraineeProfileResponse updateTraineeProfile(String username, TraineeUpdateRequest request) {
+        Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(username);
+        if (optionalTrainee.isPresent()) {
+            Trainee trainee = optionalTrainee.get();
+            trainee.setFirstName(request.getFirstName());
+            trainee.setLastName(request.getLastName());
+            trainee.setDateOfBirth(request.getDateOfBirth());
+            trainee.setAddress(request.getAddress());
+            trainee.setIsActive(request.isActive());
+
+            traineeRepository.save(trainee);
+            return buildTraineeProfileResponse(trainee);
+        }
+        return null;
+    }
+
+
+
+    private TraineeProfileResponse buildTraineeProfileResponse(Trainee trainee) {
+        TraineeProfileResponse profileResponse = new TraineeProfileResponse();
+        profileResponse.setFirstName(trainee.getFirstName());
+        profileResponse.setLastName(trainee.getLastName());
+        profileResponse.setDateOfBirth(trainee.getDateOfBirth());
+        profileResponse.setAddress(trainee.getAddress());
+        profileResponse.setActive(trainee.getIsActive());
+
+        List<TrainerInfo> trainerInfos = new ArrayList<>();
+        for (Trainer trainer : trainee.getTrainers()) {
+            TrainerInfo trainerInfo = new TrainerInfo();
+            trainerInfo.setUsername(trainer.getUsername());
+            trainerInfo.setFirstName(trainer.getFirstName());
+            trainerInfo.setLastName(trainer.getLastName());
+            trainerInfo.setTrainingType(trainer.getTrainingType());
+            trainerInfos.add(trainerInfo);
+        }
+        profileResponse.setTrainers(trainerInfos);
+
+        return profileResponse;
+    }
+
 
 
     public boolean deleteTraineeProfile(String username) {
@@ -256,36 +293,7 @@ public class TraineeService {
     }
 
 
-    /*
-    // Register trainee logic without modelMapper:25 lines of code
-    public TraineeRegistrationResponse registerTrainee(TraineeRegistrationRequest request) {
-        // Create Trainee entity from request
-        Trainee trainee = new Trainee();
-        trainee.setFirstName(request.getFirstName());
-        trainee.setLastName(request.getLastName());
-        trainee.setDateOfBirth(request.getDateOfBirth());
-        trainee.setAddress(request.getAddress());
-        trainee.setIsActive(true);
-        trainee.setPassword("password");
-        trainee.setUsername("username");
 
-        // Save trainee to the database
-        trainee = traineeRepository.save(trainee);
-
-        // Generate username and password
-        String username = calculateUsername(trainee.getFirstName(), trainee.getLastName());
-        String password = generatePassword();
-
-        // Update trainee with username and password
-        trainee.setUsername(username);
-        trainee.setPassword(password);
-        traineeRepository.save(trainee);
-
-        // Create registration response
-        return new TraineeRegistrationResponse(username, password);
-    }
-
-     */
 
 
 

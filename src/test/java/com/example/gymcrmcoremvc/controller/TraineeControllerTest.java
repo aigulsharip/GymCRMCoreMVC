@@ -2,7 +2,7 @@ package com.example.gymcrmcoremvc.controller;
 
 import com.example.gymcrmcoremvc.controller.archive.TraineeControllerOld;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
-import com.example.gymcrmcoremvc.entity.Trainer;
+import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;

@@ -1,12 +1,12 @@
 package com.example.gymcrmcoremvc.controller;
 
-import com.example.gymcrmcoremvc.entity.Trainer;
-import com.example.gymcrmcoremvc.entity.trainee.ChangeLoginRequest;
+import com.example.gymcrmcoremvc.entity.trainer.Trainer;
+import com.example.gymcrmcoremvc.entity.registration.ChangeLoginRequest;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
-import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationRequest;
-import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationResponse;
-import com.example.gymcrmcoremvc.entity.trainer.TrainerRegistrationRequest;
-import com.example.gymcrmcoremvc.entity.trainer.TrainerRegistrationResponse;
+import com.example.gymcrmcoremvc.entity.registration.TraineeRegistrationRequest;
+import com.example.gymcrmcoremvc.entity.registration.TraineeRegistrationResponse;
+import com.example.gymcrmcoremvc.entity.registration.TrainerRegistrationRequest;
+import com.example.gymcrmcoremvc.entity.registration.TrainerRegistrationResponse;
 import com.example.gymcrmcoremvc.service.RegistrationLoginService;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;

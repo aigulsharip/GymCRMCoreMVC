@@ -1,4 +1,4 @@
-package com.example.gymcrmcoremvc.entity.trainee;
+package com.example.gymcrmcoremvc.entity.registration;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.example.gymcrmcoremvc.controller.archive;
 
-import com.example.gymcrmcoremvc.entity.Trainer;
+import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.entity.TrainingType;
 import com.example.gymcrmcoremvc.service.TrainerService;

@@ -1,9 +1,14 @@
-package com.example.gymcrmcoremvc.entity;
+package com.example.gymcrmcoremvc.entity.trainer;
 
+import com.example.gymcrmcoremvc.entity.TrainingType;
+import com.example.gymcrmcoremvc.entity.trainee.Trainee;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "trainers")
@@ -34,4 +39,9 @@ public class Trainer {
     @ManyToOne
     @JoinColumn(name = "training_type_id")
     private TrainingType trainingType;
+
+    @Column
+    @OneToMany
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<Trainee> trainees;
 }

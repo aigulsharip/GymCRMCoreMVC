@@ -1,12 +1,11 @@
 package com.example.gymcrmcoremvc.service;
 
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
-import com.example.gymcrmcoremvc.entity.Trainer;
+import com.example.gymcrmcoremvc.entity.trainee.TraineeInfo;
+import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
-import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationRequest;
-import com.example.gymcrmcoremvc.entity.trainee.TraineeRegistrationResponse;
-import com.example.gymcrmcoremvc.entity.trainer.TrainerRegistrationRequest;
-import com.example.gymcrmcoremvc.entity.trainer.TrainerRegistrationResponse;
+import com.example.gymcrmcoremvc.entity.trainer.TrainerProfileResponse;
+import com.example.gymcrmcoremvc.entity.trainer.TrainerUpdateRequest;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,8 +13,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +54,60 @@ public class TrainerService {
             trainer.setPassword(newPassword);
             trainerRepository.save(trainer);
         }
+    }
 
+    public TrainerProfileResponse getTrainerProfile(String username) {
+        Optional<Trainer> optionalTrainer = trainerRepository.findByUsername(username);
+        if (optionalTrainer.isPresent()) {
+            Trainer trainer = optionalTrainer.get();
+            return buildTrainerProfileResponse(trainer);
+        }
+        return null;
+    }
+
+    public TrainerProfileResponse updateTrainerProfile(String username, TrainerUpdateRequest request) {
+        Optional<Trainer> optionalTrainer = trainerRepository.findByUsername(username);
+        if (optionalTrainer.isPresent()) {
+            Trainer trainer = optionalTrainer.get();
+            // Update fields
+            trainer.setFirstName(request.getFirstName());
+            trainer.setLastName(request.getLastName());
+            trainer.setIsActive(request.isActive());
+
+            trainerRepository.save(trainer);
+            return buildTrainerProfileResponse(trainer);
+        }
+        return null;
+    }
+
+    public boolean deleteTrainerProfile(String username) {
+        Optional<Trainer> authenticatedTrainer = trainerRepository.findByUsername(username);
+        if (authenticatedTrainer.isPresent()) {
+            Trainer trainer = authenticatedTrainer.get();
+            trainerRepository.delete(trainer);
+            return true; // Trainee profile deleted successfully
+        }
+        return false; // Authentication failed or trainee profile not found
+    }
+
+    private TrainerProfileResponse buildTrainerProfileResponse(Trainer trainer) {
+        TrainerProfileResponse profileResponse = new TrainerProfileResponse();
+        profileResponse.setFirstName(trainer.getFirstName());
+        profileResponse.setLastName(trainer.getLastName());
+        profileResponse.setSpecialization(trainer.getTrainingType());
+        profileResponse.setActive(trainer.getIsActive());
+
+        List<TraineeInfo> traineeInfos = new ArrayList<>();
+        for (Trainee trainee : trainer.getTrainees()) {
+            TraineeInfo traineeInfo = new TraineeInfo();
+            traineeInfo.setUsername(trainee.getUsername());
+            traineeInfo.setFirstName(trainee.getFirstName());
+            traineeInfo.setLastName(trainee.getLastName());
+            traineeInfos.add(traineeInfo);
+        }
+        profileResponse.setTrainees(traineeInfos);
+
+        return profileResponse;
     }
 
 

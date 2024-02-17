@@ -1,15 +1,14 @@
 package com.example.gymcrmcoremvc.entity.trainer;
 
-import com.example.gymcrmcoremvc.entity.TrainingType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class TrainerRegistrationRequest {
+public class TrainerUpdateRequest {
     private String firstName;
     private String lastName;
-    private TrainingType trainingType;
+    private boolean isActive;
 }

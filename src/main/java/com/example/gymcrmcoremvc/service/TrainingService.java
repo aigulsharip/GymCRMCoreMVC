@@ -5,16 +5,27 @@ import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.training.Training;
 import com.example.gymcrmcoremvc.entity.training.TrainingRequest;
+import com.example.gymcrmcoremvc.entity.training.TrainingResponse;
+import com.example.gymcrmcoremvc.entity.trainingType.TrainingType;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;
 import com.example.gymcrmcoremvc.repository.TrainingRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,6 +36,9 @@ public class TrainingService {
     private final TraineeRepository traineeRepository;
 
     private final TrainerRepository trainerRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public TrainingService(TrainingRepository trainingRepository, TraineeRepository traineeRepository, TrainerRepository trainerRepository) {
@@ -54,6 +68,90 @@ public class TrainingService {
 
         // Save the training entity to the database
         trainingRepository.save(training);
+    }
+
+    public List<TrainingResponse> getTraineeTrainings(String username, Date periodFrom, Date periodTo, String trainerName, String trainingType) {
+        // Use the provided parameters to filter trainings from the repository
+        List<Training> trainings = trainingRepository.findByTraineeUsernameAndTrainingDateBetweenAndTrainerFirstNameContainingAndTrainingTypeTrainingTypeName(username, periodFrom, periodTo, trainerName, trainingType);
+
+        // Convert the list of Training entities to a list of TrainingResponse DTOs
+        List<TrainingResponse> trainingResponses = trainings.stream()
+                .map(this::mapToTrainingResponse)
+                .collect(Collectors.toList());
+
+        return trainingResponses;
+    }
+
+    // Helper method to map Training entity to TrainingResponse DTO
+    private TrainingResponse mapToTrainingResponse(Training training) {
+        TrainingResponse response = new TrainingResponse();
+        response.setTrainingName(training.getTrainingName());
+        response.setTrainingDate(training.getTrainingDate());
+        response.setTrainingType(training.getTrainingType());
+        response.setTrainingDuration(training.getTrainingDuration());
+        response.setTrainerName(training.getTrainer().getUsername());
+        return response;
+    }
+
+    public List<TrainingResponse> getTraineeTrainingList(String username, LocalDate fromDate, LocalDate toDate, String trainerName, String trainingTypeName) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
+        Root<Training> root = criteriaQuery.from(Training.class);
+
+        // Selecting specific fields to avoid fetching unnecessary data
+        criteriaQuery.multiselect(
+                root.get("trainingName"),
+                root.get("trainingDate"),
+                root.get("trainingType"),
+                root.get("trainingDuration"),
+                root.join("trainer").get("username")
+        );
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        // Add username condition
+        predicates.add(criteriaBuilder.equal(root.join("trainee").get("username"), username));
+
+        // Add fromDate condition if provided
+        if (fromDate != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("trainingDate"), fromDate));
+        }
+
+        // Add toDate condition if provided
+        if (toDate != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("trainingDate"), toDate));
+        }
+
+        // Add trainerName condition if provided
+        if (trainerName != null && !trainerName.isEmpty()) {
+            Join<Training, Trainer> trainerJoin = root.join("trainer");
+            predicates.add(criteriaBuilder.equal(trainerJoin.get("username"), trainerName));
+        }
+
+
+        // Add trainingTypeName condition if provided
+        if (trainingTypeName != null && !trainingTypeName.isEmpty()) {
+            predicates.add(criteriaBuilder.like(root.join("trainingType").get("trainingTypeName"), "%" + trainingTypeName + "%"));
+        }
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+
+        TypedQuery<Tuple> query = entityManager.createQuery(criteriaQuery);
+        List<Tuple> tuples = query.getResultList();
+
+        // Mapping Tuple results to TrainingResponse objects
+        List<TrainingResponse> trainingResponses = new ArrayList<>();
+        for (Tuple tuple : tuples) {
+            TrainingResponse trainingResponse = new TrainingResponse();
+            trainingResponse.setTrainingName((String) tuple.get(0));
+            trainingResponse.setTrainingDate((LocalDate) tuple.get(1));
+            trainingResponse.setTrainingType((TrainingType) tuple.get(2));
+            trainingResponse.setTrainingDuration((int) tuple.get(3));
+            trainingResponse.setTrainerName((String) tuple.get(4));
+            trainingResponses.add(trainingResponse);
+        }
+
+        return trainingResponses;
     }
 
     @Transactional(readOnly = true)

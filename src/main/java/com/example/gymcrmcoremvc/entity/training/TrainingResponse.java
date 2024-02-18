@@ -11,14 +11,11 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TrainingRequest {
-
-    private String traineeUsername;
-    private String trainerUsername;
-    private TrainingType trainingType;
+public class TrainingResponse {
     private String trainingName;
     private LocalDate trainingDate;
+    private TrainingType trainingType;
     private int trainingDuration;
-
-
+    private String trainerName;
 }
+

@@ -3,6 +3,7 @@ package com.example.gymcrmcoremvc.controller;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.training.Training;
 import com.example.gymcrmcoremvc.entity.training.TrainingRequest;
+import com.example.gymcrmcoremvc.entity.training.TrainingResponse;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
 import com.example.gymcrmcoremvc.service.TrainingService;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -46,6 +49,22 @@ public class TrainingController {
     @PostMapping
     public ResponseEntity<String> addTraining(@RequestBody TrainingRequest request) {
         trainingService.addTraining(request);
-        return ResponseEntity.status(HttpStatus.OK).body("Training created succesfully");    }
+        return ResponseEntity.status(HttpStatus.OK).body("Training created succesfully");
+    }
+
+    @GetMapping("/trainee-trainings")
+    public ResponseEntity<List<TrainingResponse>> getTraineeTrainingsList(
+            @RequestParam(required = true) String username,
+            @RequestParam(required = false) LocalDate periodFrom,
+            @RequestParam(required = false) LocalDate periodTo,
+            @RequestParam(required = false) String trainerName,
+            @RequestParam(required = false) String trainingTypeName) {
+
+        // Call service method to retrieve trainee's trainings based on the provided criteria
+    //    List<TrainingResponse> trainings = trainingService.getTraineeTrainings(username, periodFrom, periodTo, trainerName, trainingTypeName);
+        List<TrainingResponse> trainings = trainingService.getTraineeTrainingList(username, periodFrom, periodTo, trainerName, trainingTypeName);
+
+        return ResponseEntity.ok().body(trainings);
+    }
 
 }

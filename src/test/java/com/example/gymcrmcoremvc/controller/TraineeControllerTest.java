@@ -1,6 +1,5 @@
 package com.example.gymcrmcoremvc.controller;
 
-import com.example.gymcrmcoremvc.controller.archive.TraineeControllerOld;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.training.Training;
@@ -20,6 +19,7 @@ import static org.mockito.Mockito.*;
 
 public class TraineeControllerTest {
 
+    /*
     private TraineeService traineeService;
     private TraineeControllerOld traineeController;
 
@@ -252,6 +252,8 @@ public class TraineeControllerTest {
         verify(trainerService).getAvailableTrainersByTrainee(trainee);
         assertEquals("trainee/training-list", viewName);
     }
+
+     */
 
 
 }

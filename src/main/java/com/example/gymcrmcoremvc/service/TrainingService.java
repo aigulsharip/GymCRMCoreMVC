@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -65,7 +64,6 @@ public class TrainingService {
         training.setTrainingDuration(request.getTrainingDuration());
         training.setTrainingType(request.getTrainingType());
 
-        // Save the training entity to the database
         trainingRepository.save(training);
     }
 
@@ -188,50 +186,5 @@ public class TrainingService {
         }
 
         return trainingResponses;
-    }
-
-
-    @Transactional(readOnly = true)
-    public Optional<Training> getTrainingById(Long id) {
-        return trainingRepository.findById(id);
-    }
-
-    @Transactional
-    public Training saveTraining(Training training) {
-        log.info("Saving new training: {}", training);
-        return trainingRepository.save(training);
-    }
-
-    @Transactional
-    public Training updateTraining(Long id, Training updatedTraining) {
-        log.info("Updating training with ID {}: {}", id, updatedTraining);
-        Optional<Training> existingTrainingOptional = trainingRepository.findById(id);
-
-        if (existingTrainingOptional.isPresent()) {
-            Training existingTraining = existingTrainingOptional.get();
-
-            // Update the fields you want to allow modification
-            existingTraining.setTrainee(updatedTraining.getTrainee());
-            existingTraining.setTrainer(updatedTraining.getTrainer());
-            existingTraining.setTrainingType(updatedTraining.getTrainingType());
-            existingTraining.setTrainingName(updatedTraining.getTrainingName());
-            existingTraining.setTrainingDate(updatedTraining.getTrainingDate());
-            existingTraining.setTrainingDuration(updatedTraining.getTrainingDuration());
-
-            Training updated = trainingRepository.save(existingTraining);
-            log.info("Training with ID {} updated successfully", id);
-            return updated;
-        } else {
-            // Handle the case where the training with the given id is not found
-            log.warn("Training with ID {} not found", id);
-            // You may throw an exception or handle it according to your application's logic
-            // For simplicity, I'm returning null here
-            return null;
-        }
-    }
-    @Transactional
-    public void deleteTraining(Long id) {
-        log.info("Deleting training with ID: {}", id);
-        trainingRepository.deleteById(id);
     }
 }

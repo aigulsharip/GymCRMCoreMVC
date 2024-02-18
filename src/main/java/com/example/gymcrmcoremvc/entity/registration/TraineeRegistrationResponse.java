@@ -10,8 +10,5 @@ import lombok.NoArgsConstructor;
 public class TraineeRegistrationResponse {
     private String username;
     private String password;
-
-    // Constructor
-    // Getters and setters
 }
 

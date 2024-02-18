@@ -1,6 +1,5 @@
 package com.example.gymcrmcoremvc.entity.trainee;
 
-import com.example.gymcrmcoremvc.entity.trainer.TrainerInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,21 +28,10 @@ public class TrainingTypeService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<TrainingType> getAllTrainingTypes() {
-        return trainingTypeRepository.findAll();
-    }
-
     private TrainingTypeResponse mapToTrainingTypeResponse(TrainingType trainingType) {
         TrainingTypeResponse response = new TrainingTypeResponse();
         response.setId(trainingType.getId());
         response.setTrainingTypeName(trainingType.getTrainingTypeName());
         return response;
     }
-
-    @Transactional(readOnly = true)
-    public Optional<TrainingType> getTrainingTypeById(Long id) {
-        return trainingTypeRepository.findById(id);
-    }
-
 }

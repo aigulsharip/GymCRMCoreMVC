@@ -1,7 +1,7 @@
 package com.example.gymcrmcoremvc.entity.trainer;
 
-import com.example.gymcrmcoremvc.entity.trainingType.TrainingType;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
+import com.example.gymcrmcoremvc.entity.trainingType.TrainingType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

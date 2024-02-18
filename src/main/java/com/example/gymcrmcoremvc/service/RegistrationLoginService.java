@@ -23,24 +23,13 @@ import java.util.Random;
 @Service
 @Slf4j
 public class RegistrationLoginService {
-
     private final TraineeRepository traineeRepository;
-    private final TrainingRepository trainingRepository;
-
     private final TrainerRepository trainerRepository;
-    private final TrainingTypeService trainingTypeService;
-
-
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Autowired
-    public RegistrationLoginService(TraineeRepository traineeRepository, TrainingRepository trainingRepository, TrainerRepository trainerRepository, TrainingTypeService trainingTypeService) {
+    public RegistrationLoginService(TraineeRepository traineeRepository, TrainerRepository trainerRepository) {
         this.traineeRepository = traineeRepository;
-        this.trainingRepository = trainingRepository;
         this.trainerRepository = trainerRepository;
-        this.trainingTypeService = trainingTypeService;
     }
 
     public TraineeRegistrationResponse registerTrainee (TraineeRegistrationRequest traineeRegistrationRequest) {
@@ -64,9 +53,6 @@ public class RegistrationLoginService {
         trainer = trainerRepository.save(trainer);
         return modelMapper.map(trainer, TrainerRegistrationResponse.class);
     }
-
-
-
 
     private String calculateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;

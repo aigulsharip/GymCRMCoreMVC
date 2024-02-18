@@ -1,9 +1,9 @@
 package com.example.gymcrmcoremvc.controller;
 
-import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.training.Training;
 import com.example.gymcrmcoremvc.entity.training.TrainingRequest;
-import com.example.gymcrmcoremvc.entity.training.TrainingResponse;
+import com.example.gymcrmcoremvc.entity.training.TrainingTraineeResponse;
+import com.example.gymcrmcoremvc.entity.training.TrainingTrainerResponse;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
 import com.example.gymcrmcoremvc.service.TrainingService;
@@ -11,11 +11,9 @@ import com.example.gymcrmcoremvc.service.TrainingTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -53,16 +51,27 @@ public class TrainingController {
     }
 
     @GetMapping("/trainee-trainings")
-    public ResponseEntity<List<TrainingResponse>> getTraineeTrainingsList(
+    public ResponseEntity<List<TrainingTraineeResponse>> getTraineeTrainingsList(
             @RequestParam(required = true) String username,
             @RequestParam(required = false) LocalDate periodFrom,
             @RequestParam(required = false) LocalDate periodTo,
             @RequestParam(required = false) String trainerName,
             @RequestParam(required = false) String trainingTypeName) {
 
-        // Call service method to retrieve trainee's trainings based on the provided criteria
-    //    List<TrainingResponse> trainings = trainingService.getTraineeTrainings(username, periodFrom, periodTo, trainerName, trainingTypeName);
-        List<TrainingResponse> trainings = trainingService.getTraineeTrainingList(username, periodFrom, periodTo, trainerName, trainingTypeName);
+        List<TrainingTraineeResponse> trainings = trainingService.getTraineeTrainingList(username, periodFrom, periodTo, trainerName, trainingTypeName);
+
+        return ResponseEntity.ok().body(trainings);
+    }
+
+    @GetMapping("/trainer-trainings")
+    public ResponseEntity<List<TrainingTrainerResponse>> getTrainerTrainingsList(
+            @RequestParam(required = true) String username,
+            @RequestParam(required = false) LocalDate periodFrom,
+            @RequestParam(required = false) LocalDate periodTo,
+            @RequestParam(required = false) String traineeName,
+            @RequestParam(required = false) String trainingTypeName) {
+
+        List<TrainingTrainerResponse> trainings = trainingService.getTrainerTrainingsList(username, periodFrom, periodTo, traineeName, trainingTypeName);
 
         return ResponseEntity.ok().body(trainings);
     }

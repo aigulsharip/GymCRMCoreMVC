@@ -6,12 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TrainingResponse {
+public class TrainingTraineeResponse {
     private String trainingName;
     private LocalDate trainingDate;
     private TrainingType trainingType;

@@ -17,5 +17,12 @@ public class TrainerProfileResponse {
     private TrainingType specialization;
     private boolean isActive;
     private List<TraineeInfo> trainees;
+
+    public TrainerProfileResponse(String firstName, String lastName, TrainingType specialization, boolean isActive) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.specialization = specialization;
+        this.isActive = isActive;
+    }
 }
 

@@ -1,11 +1,11 @@
 package com.example.gymcrmcoremvc.service;
 
-import com.example.gymcrmcoremvc.entity.*;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.trainee.TraineeProfileResponse;
 import com.example.gymcrmcoremvc.entity.trainee.TraineeUpdateRequest;
 import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerInfo;
+import com.example.gymcrmcoremvc.entity.training.Training;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;
 import com.example.gymcrmcoremvc.repository.TrainingRepository;
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -125,26 +126,6 @@ public class TraineeService {
         return false; // Authentication failed or trainee profile not found
     }
 
-    public List<TrainerInfo> getNotAssignedActiveTrainers(String username) {
-        Trainee trainee = traineeRepository.findByUsername(username).orElse(null);
-        if (trainee != null && trainee.getIsActive()) {
-            List<Trainer> allActiveTrainers = trainerRepository.findByIsActiveTrue();
-            List<TrainerInfo> notAssignedActiveTrainers = new ArrayList<>();
-            for (Trainer trainer : allActiveTrainers) {
-                if (!trainee.getTrainers().contains(trainer)) {
-                    TrainerInfo trainerInfo = new TrainerInfo();
-                    trainerInfo.setUsername(trainer.getUsername());
-                    trainerInfo.setFirstName(trainer.getFirstName());
-                    trainerInfo.setLastName(trainer.getLastName());
-                    trainerInfo.setTrainingType(trainer.getTrainingType());
-                    notAssignedActiveTrainers.add(trainerInfo);
-                }
-            }
-            return notAssignedActiveTrainers;
-        }
-        return new ArrayList<>();
-    }
-
     @Transactional(readOnly = true)
     public List<Trainee> getAllTrainees() {
         log.info("Fetching all trainees");
@@ -160,6 +141,44 @@ public class TraineeService {
         } else {
             throw new EntityNotFoundException("Trainee not found with username: " + username);
         }
+    }
+
+    public List<TrainerInfo> getNotAssignedActiveTrainers(String traineeUsername) {
+        Trainee trainee = traineeRepository.findByUsername(traineeUsername).orElseThrow(() -> new RuntimeException("Trainee not found"));
+        List<Trainer> assignedTrainers = trainee.getTrainers();
+        List<Trainer> allTrainers = trainerRepository.findAll();
+        List<TrainerInfo> trainersNotAssigned = new ArrayList<>();
+        for (Trainer trainer : allTrainers) {
+            if (!assignedTrainers.contains(trainer) && trainer.getIsActive()) {
+                TrainerInfo trainerInfo = new TrainerInfo();
+                trainerInfo.setUsername(trainer.getUsername());
+                trainerInfo.setFirstName(trainer.getFirstName());
+                trainerInfo.setLastName(trainer.getLastName());
+                trainerInfo.setTrainingType(trainer.getTrainingType());
+                trainersNotAssigned.add(trainerInfo);
+            }
+        }
+        return trainersNotAssigned;
+    }
+
+    public List<TrainerInfo> updateTraineeTrainers(String traineeUsername, List<String> trainerUsernames) {
+        Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(traineeUsername);
+        Trainee trainee = optionalTrainee.orElseThrow(() -> new EntityNotFoundException("Trainee not found"));
+        List<Trainer> trainers = trainerRepository.findByUsernameIn(trainerUsernames);
+        trainee.setTrainers(trainers);
+        traineeRepository.save(trainee);
+        return trainers.stream()
+                .map(this::mapToTrainerProfileResponse)
+                .collect(Collectors.toList());
+    }
+
+    private TrainerInfo mapToTrainerProfileResponse(Trainer trainer) {
+        return new TrainerInfo(
+                trainer.getUsername(),
+                trainer.getFirstName(),
+                trainer.getLastName(),
+                trainer.getTrainingType()
+        );
     }
 
     private String calculateUsername(String firstName, String lastName) {

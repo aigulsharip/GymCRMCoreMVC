@@ -3,7 +3,7 @@ package com.example.gymcrmcoremvc.service;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.trainee.TraineeInfo;
 import com.example.gymcrmcoremvc.entity.trainer.Trainer;
-import com.example.gymcrmcoremvc.entity.Training;
+import com.example.gymcrmcoremvc.entity.training.Training;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerProfileResponse;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerUpdateRequest;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;

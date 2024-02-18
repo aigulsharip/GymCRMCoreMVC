@@ -1,7 +1,9 @@
 package com.example.gymcrmcoremvc.controller;
 
 import com.example.gymcrmcoremvc.entity.trainee.*;
+import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerInfo;
+import com.example.gymcrmcoremvc.entity.trainer.TrainerProfileResponse;
 import com.example.gymcrmcoremvc.service.RegistrationLoginService;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
@@ -83,6 +85,14 @@ public class TraineeController {
                                                           @RequestParam boolean isActive) {
         traineeService.activateDeactivateTrainee(username, isActive);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/update-trainers")
+    public ResponseEntity<List<TrainerInfo>> updateTraineeTrainers(
+            @RequestParam String username,
+            @RequestBody List<String> trainerUsernames) {
+        List<TrainerInfo> updatedTrainers = traineeService.updateTraineeTrainers(username, trainerUsernames);
+        return ResponseEntity.ok(updatedTrainers);
     }
 
 

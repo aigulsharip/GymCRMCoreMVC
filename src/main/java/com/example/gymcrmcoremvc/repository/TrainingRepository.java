@@ -1,6 +1,6 @@
 package com.example.gymcrmcoremvc.repository;
 
-import com.example.gymcrmcoremvc.entity.Training;
+import com.example.gymcrmcoremvc.entity.training.Training;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

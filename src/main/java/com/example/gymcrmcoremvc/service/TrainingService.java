@@ -1,7 +1,12 @@
 package com.example.gymcrmcoremvc.service;
 
 
-import com.example.gymcrmcoremvc.entity.Training;
+import com.example.gymcrmcoremvc.entity.trainee.Trainee;
+import com.example.gymcrmcoremvc.entity.trainer.Trainer;
+import com.example.gymcrmcoremvc.entity.training.Training;
+import com.example.gymcrmcoremvc.entity.training.TrainingRequest;
+import com.example.gymcrmcoremvc.repository.TraineeRepository;
+import com.example.gymcrmcoremvc.repository.TrainerRepository;
 import com.example.gymcrmcoremvc.repository.TrainingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +22,38 @@ public class TrainingService {
 
     private final TrainingRepository trainingRepository;
 
+    private final TraineeRepository traineeRepository;
+
+    private final TrainerRepository trainerRepository;
+
     @Autowired
-    public TrainingService(TrainingRepository trainingRepository) {
+    public TrainingService(TrainingRepository trainingRepository, TraineeRepository traineeRepository, TrainerRepository trainerRepository) {
         this.trainingRepository = trainingRepository;
+        this.traineeRepository = traineeRepository;
+        this.trainerRepository = trainerRepository;
     }
 
     @Transactional(readOnly = true)
     public List<Training> getAllTrainings() {
         log.info("Fetching all trainings");
         return trainingRepository.findAll();
+    }
+
+    public void addTraining(TrainingRequest request) {
+        // Convert the request to a Training entity if needed
+        Training training = new Training();
+        Trainee trainee = traineeRepository.findByUsername(request.getTraineeUsername()).orElse(null);
+        Trainer trainer = trainerRepository.findByUsername(request.getTrainerUsername()).orElse(null);
+
+        training.setTrainee(trainee);
+        training.setTrainer(trainer);
+        training.setTrainingName(request.getTrainingName());
+        training.setTrainingDate(request.getTrainingDate());
+        training.setTrainingDuration(request.getTrainingDuration());
+        training.setTrainingType(request.getTrainingType());
+
+        // Save the training entity to the database
+        trainingRepository.save(training);
     }
 
     @Transactional(readOnly = true)

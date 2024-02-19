@@ -5,8 +5,10 @@ import com.example.gymcrmcoremvc.entity.trainee.TraineeProfileResponse;
 import com.example.gymcrmcoremvc.entity.trainee.TraineeUpdateRequest;
 import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerInfo;
+import com.example.gymcrmcoremvc.entity.training.Training;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;
+import com.example.gymcrmcoremvc.repository.TrainingRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +26,14 @@ public class TraineeService {
 
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
+    private final TrainingRepository trainingRepository;
 
 
     @Autowired
-    public TraineeService(TraineeRepository traineeRepository, TrainerRepository trainerRepository) {
+    public TraineeService(TraineeRepository traineeRepository, TrainerRepository trainerRepository, TrainingRepository trainingRepository) {
         this.traineeRepository = traineeRepository;
         this.trainerRepository = trainerRepository;
+        this.trainingRepository = trainingRepository;
     }
 
     public Optional<Trainee> authenticateTrainee(String username, String password) {
@@ -99,10 +103,14 @@ public class TraineeService {
         Optional<Trainee> authenticatedTrainee = findTraineeByUsername(username);
         if (authenticatedTrainee.isPresent()) {
             Trainee trainee = authenticatedTrainee.get();
+            List<Training> trainings = trainingRepository.findByTrainee(trainee);
+            if (!trainings.isEmpty()) {
+                trainingRepository.deleteAll(trainings);
+            }
             traineeRepository.delete(trainee);
-            return true; // Trainee profile deleted successfully
+           return true;
         }
-        return false; // Authentication failed or trainee profile not found
+        return false;
     }
 
     @Transactional(readOnly = true)

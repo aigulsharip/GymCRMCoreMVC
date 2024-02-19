@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Service
 @Slf4j
 public class TraineeService {
@@ -27,7 +28,6 @@ public class TraineeService {
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
     private final TrainingRepository trainingRepository;
-
 
     @Autowired
     public TraineeService(TraineeRepository traineeRepository, TrainerRepository trainerRepository, TrainingRepository trainingRepository) {
@@ -37,23 +37,28 @@ public class TraineeService {
     }
 
     public Optional<Trainee> authenticateTrainee(String username, String password) {
+        log.info("Authenticating trainee with username: {}", username);
         return traineeRepository.findByUsernameAndPassword(username, password);
     }
 
     public Optional<Trainee> findTraineeByUsername(String username) {
+        log.info("Finding trainee by username: {}", username);
         return traineeRepository.findByUsername(username);
     }
 
     public void changePassword(String username, String oldPassword, String newPassword) {
+        log.info("Changing password for trainee with username: {}", username);
         Optional<Trainee> authenticatedTrainee = authenticateTrainee(username, oldPassword);
         if (authenticatedTrainee.isPresent()) {
             Trainee trainee = authenticatedTrainee.get();
             trainee.setPassword(newPassword);
             traineeRepository.save(trainee);
+            log.info("Password changed successfully for trainee with username: {}", username);
         }
     }
 
     public TraineeProfileResponse getTraineeProfile(String username) {
+        log.info("Getting profile for trainee with username: {}", username);
         Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(username);
         if (optionalTrainee.isPresent()) {
             Trainee trainee = optionalTrainee.get();
@@ -63,6 +68,7 @@ public class TraineeService {
     }
 
     public TraineeProfileResponse updateTraineeProfile(String username, TraineeUpdateRequest request) {
+        log.info("Updating profile for trainee with username: {}", username);
         Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(username);
         if (optionalTrainee.isPresent()) {
             Trainee trainee = optionalTrainee.get();
@@ -100,15 +106,18 @@ public class TraineeService {
     }
 
     public boolean deleteTraineeProfile(String username) {
+        log.info("Deleting profile for trainee with username: {}", username);
         Optional<Trainee> authenticatedTrainee = findTraineeByUsername(username);
         if (authenticatedTrainee.isPresent()) {
             Trainee trainee = authenticatedTrainee.get();
             List<Training> trainings = trainingRepository.findByTrainee(trainee);
             if (!trainings.isEmpty()) {
                 trainingRepository.deleteAll(trainings);
+                log.info("Deleted {} trainings associated with trainee username: {}", trainings.size(), username);
             }
             traineeRepository.delete(trainee);
-           return true;
+            log.info("Deleted trainee profile with username: {}", username);
+            return true;
         }
         return false;
     }
@@ -120,6 +129,7 @@ public class TraineeService {
     }
 
     public void activateDeactivateTrainee(String username, boolean isActive) {
+        log.info("Activating/deactivating trainee with username: {}", username);
         Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(username);
         if (optionalTrainee.isPresent()) {
             Trainee trainee = optionalTrainee.get();
@@ -131,6 +141,7 @@ public class TraineeService {
     }
 
     public List<TrainerInfo> getNotAssignedActiveTrainers(String traineeUsername) {
+        log.info("Fetching not assigned active trainers for trainee with username: {}", traineeUsername);
         Trainee trainee = traineeRepository.findByUsername(traineeUsername).orElseThrow(() -> new RuntimeException("Trainee not found"));
         List<Trainer> assignedTrainers = trainee.getTrainers();
         List<Trainer> allTrainers = trainerRepository.findAll();
@@ -149,6 +160,7 @@ public class TraineeService {
     }
 
     public List<TrainerInfo> updateTraineeTrainers(String traineeUsername, List<String> trainerUsernames) {
+        log.info("Updating trainers for trainee with username: {}", traineeUsername);
         Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(traineeUsername);
         Trainee trainee = optionalTrainee.orElseThrow(() -> new EntityNotFoundException("Trainee not found"));
         List<Trainer> trainers = trainerRepository.findByUsernameIn(trainerUsernames);

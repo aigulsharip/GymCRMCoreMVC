@@ -33,6 +33,7 @@ public class RegistrationLoginService {
     }
 
     public TraineeRegistrationResponse registerTrainee (TraineeRegistrationRequest traineeRegistrationRequest) {
+        log.info("Registering trainee: {}", traineeRegistrationRequest);
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Trainee trainee = modelMapper.map(traineeRegistrationRequest, Trainee.class);
@@ -40,10 +41,12 @@ public class RegistrationLoginService {
         trainee.setPassword(generatePassword());
         trainee.setIsActive(true);
         trainee = traineeRepository.save(trainee);
+        log.info("Trainee registered successfully: {}", trainee);
         return modelMapper.map(trainee, TraineeRegistrationResponse.class);
     }
 
     public TrainerRegistrationResponse registerTrainer (TrainerRegistrationRequest trainerRegistrationRequest) {
+        log.info("Registering trainer: {}", trainerRegistrationRequest);
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Trainer trainer = modelMapper.map(trainerRegistrationRequest, Trainer.class);
@@ -51,15 +54,22 @@ public class RegistrationLoginService {
         trainer.setPassword(generatePassword());
         trainer.setIsActive(true);
         trainer = trainerRepository.save(trainer);
+        log.info("Trainer registered successfully: {}", trainer);
         return modelMapper.map(trainer, TrainerRegistrationResponse.class);
     }
 
     public boolean isTrainer(String firstName, String lastName) {
-        return trainerRepository.existsByFirstNameAndLastName(firstName, lastName);
+        log.info("Checking if {} {} is a trainer", firstName, lastName);
+        boolean result = trainerRepository.existsByFirstNameAndLastName(firstName, lastName);
+        log.info("{} {} is{} a trainer", firstName, lastName, result ? "" : " not");
+        return result;
     }
 
     public boolean isTrainee(String firstName, String lastName) {
-        return traineeRepository.existsByFirstNameAndLastName(firstName, lastName);
+        log.info("Checking if {} {} is a trainee", firstName, lastName);
+        boolean result = traineeRepository.existsByFirstNameAndLastName(firstName, lastName);
+        log.info("{} {} is{} a trainee", firstName, lastName, result ? "" : " not");
+        return result;
     }
 
     private String calculateUsername(String firstName, String lastName) {

@@ -30,11 +30,8 @@ import java.util.List;
 public class TrainingService {
 
     private final TrainingRepository trainingRepository;
-
     private final TraineeRepository traineeRepository;
-
     private final TrainerRepository trainerRepository;
-
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -52,6 +49,7 @@ public class TrainingService {
     }
 
     public void addTraining(TrainingRequest request) {
+        log.info("Adding new training");
         // Convert the request to a Training entity if needed
         Training training = new Training();
         Trainee trainee = traineeRepository.findByUsername(request.getTraineeUsername()).orElse(null);
@@ -65,9 +63,11 @@ public class TrainingService {
         training.setTrainingType(request.getTrainingType());
 
         trainingRepository.save(training);
+        log.info("Training added successfully");
     }
 
     public List<TrainingTraineeResponse> getTraineeTrainingList(String username, LocalDate fromDate, LocalDate toDate, String trainerName, String trainingTypeName) {
+        log.info("Fetching trainee training list for trainee: {}", username);
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
         Root<Training> root = criteriaQuery.from(Training.class);
@@ -125,10 +125,12 @@ public class TrainingService {
             trainingResponses.add(trainingResponse);
         }
 
+        log.info("Trainee training list fetched successfully");
         return trainingResponses;
     }
 
     public List<TrainingTrainerResponse> getTrainerTrainingsList(String username, LocalDate fromDate, LocalDate toDate, String traineeName, String trainingTypeName) {
+        log.info("Fetching trainer training list for trainer: {}", username);
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
         Root<Training> root = criteriaQuery.from(Training.class);
@@ -185,6 +187,7 @@ public class TrainingService {
             trainingResponses.add(trainingResponse);
         }
 
+        log.info("Trainer training list fetched successfully");
         return trainingResponses;
     }
 }

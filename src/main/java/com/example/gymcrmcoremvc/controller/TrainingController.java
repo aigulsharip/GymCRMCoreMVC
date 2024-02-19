@@ -10,6 +10,7 @@ import com.example.gymcrmcoremvc.service.TrainingService;
 import com.example.gymcrmcoremvc.service.TrainingTypeService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +21,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/trainings")
+@Slf4j
 public class TrainingController {
 
     private final TrainingService trainingService;
-
 
     @Autowired
     public TrainingController(TrainingService trainingService) {
@@ -32,18 +33,23 @@ public class TrainingController {
 
     @GetMapping
     public ResponseEntity<List<Training>> getAllTrainings() {
+        log.info("Received request to get all trainings");
         List<Training> trainings = trainingService.getAllTrainings();
         if (!trainings.isEmpty()) {
+            log.info("Returning all trainings: {}", trainings);
             return ResponseEntity.ok(trainings);
         } else {
+            log.warn("No trainings found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
     @PostMapping
     public ResponseEntity<String> addTraining(@RequestBody @Valid TrainingRequest request) {
+        log.info("Received request to add new training: {}", request);
         trainingService.addTraining(request);
-        return ResponseEntity.status(HttpStatus.OK).body("Training created succesfully");
+        log.info("Training created successfully");
+        return ResponseEntity.status(HttpStatus.OK).body("Training created successfully");
     }
 
     @GetMapping("/trainee-trainings")
@@ -53,8 +59,10 @@ public class TrainingController {
             @RequestParam(required = false) LocalDate periodTo,
             @RequestParam(required = false) String trainerName,
             @RequestParam(required = false) String trainingTypeName) {
-
+        log.info("Received request to get trainee trainings for username: {}, periodFrom: {}, periodTo: {}, trainerName: {}, trainingTypeName: {}",
+                username, periodFrom, periodTo, trainerName, trainingTypeName);
         List<TrainingTraineeResponse> trainings = trainingService.getTraineeTrainingList(username, periodFrom, periodTo, trainerName, trainingTypeName);
+        log.info("Returning trainee trainings: {}", trainings);
         return ResponseEntity.ok().body(trainings);
     }
 
@@ -65,10 +73,10 @@ public class TrainingController {
             @RequestParam(required = false) LocalDate periodTo,
             @RequestParam(required = false) String traineeName,
             @RequestParam(required = false) String trainingTypeName) {
-
+        log.info("Received request to get trainer trainings for username: {}, periodFrom: {}, periodTo: {}, traineeName: {}, trainingTypeName: {}",
+                username, periodFrom, periodTo, traineeName, trainingTypeName);
         List<TrainingTrainerResponse> trainings = trainingService.getTrainerTrainingsList(username, periodFrom, periodTo, traineeName, trainingTypeName);
-
+        log.info("Returning trainer trainings: {}", trainings);
         return ResponseEntity.ok().body(trainings);
     }
-
 }

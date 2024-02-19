@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface TrainerRepository extends JpaRepository<Trainer, Long> {
     boolean existsByUsername(String username);
+
+    boolean existsByFirstNameAndLastName(String firstName, String lastName);
     Optional<Trainer> findByUsernameAndPassword (String username, String password);
     Optional<Trainer> findByUsername (String username);
     List<Trainer> findByUsernameIn(List<String> trainerUsernames);

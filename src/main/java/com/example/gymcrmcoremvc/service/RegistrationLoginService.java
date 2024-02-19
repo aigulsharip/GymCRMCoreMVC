@@ -54,6 +54,14 @@ public class RegistrationLoginService {
         return modelMapper.map(trainer, TrainerRegistrationResponse.class);
     }
 
+    public boolean isTrainer(String firstName, String lastName) {
+        return trainerRepository.existsByFirstNameAndLastName(firstName, lastName);
+    }
+
+    public boolean isTrainee(String firstName, String lastName) {
+        return traineeRepository.existsByFirstNameAndLastName(firstName, lastName);
+    }
+
     private String calculateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;
         String calculatedUsername = baseUsername.toLowerCase(Locale.ROOT);
@@ -62,7 +70,7 @@ public class RegistrationLoginService {
         while (traineeRepository.existsByUsername(calculatedUsername) || trainerRepository.existsByUsername(calculatedUsername)) {
             calculatedUsername = baseUsername + counter++;
         }
-        return calculatedUsername;
+        return calculatedUsername.toLowerCase();
     }
 
     private String generatePassword() {

@@ -1,259 +1,141 @@
 package com.example.gymcrmcoremvc.controller;
 
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
-import com.example.gymcrmcoremvc.entity.trainer.Trainer;
-import com.example.gymcrmcoremvc.entity.training.Training;
+import com.example.gymcrmcoremvc.entity.trainee.TraineeProfileResponse;
+import com.example.gymcrmcoremvc.entity.trainee.TraineeUpdateRequest;
+import com.example.gymcrmcoremvc.entity.trainer.TrainerInfo;
 import com.example.gymcrmcoremvc.service.TraineeService;
-import com.example.gymcrmcoremvc.service.TrainerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class TraineeControllerTest {
+class TraineeControllerTest {
 
-    /*
+    @Mock
     private TraineeService traineeService;
-    private TraineeControllerOld traineeController;
 
-    private TrainerService trainerService;
+    @InjectMocks
+    private TraineeController traineeController;
 
     @BeforeEach
     void setUp() {
-        traineeService = mock(TraineeService.class);
-        trainerService = mock(TrainerService.class);
-        traineeController = new TraineeControllerOld(traineeService, trainerService);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testGetAllTrainees_NoSearch() {
-        // Setup
+    void getAllTrainees_ReturnsTraineesSuccessfully() {
         List<Trainee> trainees = new ArrayList<>();
         trainees.add(new Trainee());
-        trainees.add(new Trainee());
-
         when(traineeService.getAllTrainees()).thenReturn(trainees);
-        Model model = mock(Model.class);
 
-        // Execution
-        String viewName = traineeController.getAllTrainees(model, null);
+        ResponseEntity<List<Trainee>> response = traineeController.getAllTrainees();
 
-        // Verification
-        verify(traineeService).getAllTrainees();
-        verify(model).addAttribute("trainees", trainees);
-        assertEquals("trainee/list", viewName);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(trainees);
+        verify(traineeService, times(1)).getAllTrainees();
     }
 
     @Test
-    void testGetAllTrainees_WithSearch() {
-        // Setup
-        String search = "username";
-        Optional<Trainee> trainee = Optional.of(new Trainee());
-
-        when(traineeService.getTraineeByUsername(search)).thenReturn(trainee);
-        Model model = mock(Model.class);
-
-        // Execution
-        String viewName = traineeController.getAllTrainees(model, search);
-
-        // Verification
-        verify(traineeService).getTraineeByUsername(search);
-        verify(model).addAttribute("trainee", trainee.get());
-        assertEquals("trainee/edit", viewName);
-    }
-
-    @Test
-    void testShowAddForm() {
-        // Setup
-        Model model = mock(Model.class);
-
-        // Execution
-        String viewName = traineeController.showAddForm(model);
-
-        // Verification
-        verify(model).addAttribute("trainee", new Trainee());
-        assertEquals("trainee/add", viewName);
-    }
-
-    @Test
-    void testAddTrainee_WithErrors() {
-        // Setup
-        Trainee trainee = new Trainee();
-        BindingResult bindingResult = mock(BindingResult.class);
-        when(bindingResult.hasErrors()).thenReturn(true);
-        Model model = mock(Model.class);
-
-        // Execution
-        String viewName = traineeController.addTrainee(trainee, bindingResult, model);
-
-        // Verification
-        verify(model).addAttribute("trainee", trainee);
-        verify(model).addAttribute("errors", bindingResult.getAllErrors());
-        assertEquals("trainee/add", viewName);
-    }
-
-    @Test
-    void testAddTrainee_Success() {
-        // Setup
-        Trainee trainee = new Trainee();
-        BindingResult bindingResult = mock(BindingResult.class);
-        when(bindingResult.hasErrors()).thenReturn(false);
-
-        // Execution
-        String viewName = traineeController.addTrainee(trainee, bindingResult, mock(Model.class));
-
-        // Verification
-        verify(traineeService).saveTrainee(trainee);
-        assertEquals("redirect:/trainees", viewName);
-    }
-
-    @Test
-    void testShowEditForm() {
-        // Setup
-        Long traineeId = 1L;
-        Trainee trainee = new Trainee();
-        trainee.setId(traineeId);
-        when(traineeService.getTraineeById(traineeId)).thenReturn(Optional.of(trainee));
-        Model model = mock(Model.class);
-
-        // Execution
-        String viewName = traineeController.showEditForm(traineeId, model);
-
-        // Verification
-        verify(traineeService).getTraineeById(traineeId);
-        verify(model).addAttribute("trainee", trainee);
-        assertEquals("trainee/edit", viewName);
-    }
-
-
-    @Test
-    void testDeleteTrainee() {
-        // Setup
-        Long traineeId = 1L;
-
-        // Execution
-        String viewName = traineeController.deleteTrainee(traineeId);
-
-        // Verification
-        verify(traineeService).deleteTrainee(traineeId);
-        assertEquals("redirect:/trainees", viewName);
-    }
-
-    @Test
-    void testViewTraineeProfile_Exists() {
-        // Setup
+    void getTraineeProfile_TraineeProfileExists_ReturnsProfileSuccessfully() {
         String username = "testUser";
-        Trainee trainee = new Trainee();
-        trainee.setUsername(username);
-        when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.of(trainee));
-        Model model = mock(Model.class);
+        TraineeProfileResponse profileResponse = new TraineeProfileResponse();
+        when(traineeService.getTraineeProfile(username)).thenReturn(profileResponse);
 
-        // Execution
-        String viewName = traineeController.viewTraineeProfile(username, model);
+        ResponseEntity<TraineeProfileResponse> response = traineeController.getTraineeProfile(username);
 
-        // Verification
-        verify(traineeService).getTraineeByUsername(username);
-        verify(model).addAttribute("trainee", trainee);
-        assertEquals("trainee/edit", viewName);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(profileResponse);
+        verify(traineeService, times(1)).getTraineeProfile(username);
     }
 
     @Test
-    void testViewTraineeProfile_NotExists() {
-        // Setup
+    void updateTraineeProfile_ProfileUpdatedSuccessfully_ReturnsProfile() {
+        String username = "testUser";
+        TraineeUpdateRequest request = new TraineeUpdateRequest();
+        TraineeProfileResponse updatedProfile = new TraineeProfileResponse();
+        when(traineeService.updateTraineeProfile(username, request)).thenReturn(updatedProfile);
+
+        ResponseEntity<TraineeProfileResponse> response = traineeController.updateTraineeProfile(username, request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(updatedProfile);
+        verify(traineeService, times(1)).updateTraineeProfile(username, request);
+    }
+
+    @Test
+    void deleteTraineeProfile_ProfileDeletedSuccessfully_ReturnsOkResponse() {
+        String username = "testUser";
+        when(traineeService.deleteTraineeProfile(username)).thenReturn(true);
+
+        ResponseEntity<String> response = traineeController.deleteTraineeProfile(username);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo("Trainee profile deleted successfully");
+        verify(traineeService, times(1)).deleteTraineeProfile(username);
+    }
+
+    @Test
+    void deleteTraineeProfile_ProfileNotFound_ReturnsUnauthorizedResponse() {
         String username = "nonExistingUser";
-        when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.empty());
+        when(traineeService.deleteTraineeProfile(username)).thenReturn(false);
 
-        // Execution
-        String viewName = traineeController.viewTraineeProfile(username, mock(Model.class));
+        ResponseEntity<String> response = traineeController.deleteTraineeProfile(username);
 
-        // Verification
-        verify(traineeService).getTraineeByUsername(username);
-        assertEquals("redirect:/trainees", viewName);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getBody()).isEqualTo("Invalid username");
+        verify(traineeService, times(1)).deleteTraineeProfile(username);
     }
 
     @Test
-    void testChangePassword_Success() {
-        // Setup
+    void getNotAssignedActiveTrainers_TrainersFound_ReturnsTrainersSuccessfully() {
         String username = "testUser";
-        String newPassword = "newPassword";
-        Trainee trainee = new Trainee();
-        trainee.setUsername(username);
-        when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.of(trainee));
+        List<TrainerInfo> trainers = new ArrayList<>();
+        trainers.add(new TrainerInfo());
+        when(traineeService.getNotAssignedActiveTrainers(username)).thenReturn(trainers);
 
-        // Execution
-        String viewName = traineeController.changePassword(username, newPassword, mock(Model.class));
+        ResponseEntity<List<TrainerInfo>> response = traineeController.getNotAssignedActiveTrainers(username);
 
-        // Verification
-        verify(traineeService).updateTraineePassword(username, newPassword);
-        assertEquals("redirect:/trainees/edit/" + trainee.getId() + "?successMessage=Password changed successfully", viewName);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(trainers);
+        verify(traineeService, times(1)).getNotAssignedActiveTrainers(username);
     }
 
     @Test
-    void testToggleTraineeStatus() {
-        // Setup
-        Long traineeId = 1L;
-
-        // Execution
-        String viewName = traineeController.toggleTraineeStatus(traineeId);
-
-        // Verification
-        verify(traineeService).toggleTraineeStatus(traineeId);
-        assertEquals("redirect:/trainees", viewName);
-    }
-
-    @Test
-    void testDeleteTraineeByUsername() {
-        // Setup
+    void activateDeactivateTrainee_TraineeActivated_ReturnsOkResponse() {
         String username = "testUser";
+        boolean isActive = true;
 
-        // Execution
-        String viewName = traineeController.deleteTraineeByUsername(username);
+        ResponseEntity<Void> response = traineeController.activateDeactivateTrainee(username, isActive);
 
-        // Verification
-        verify(traineeService).deleteTraineeByUsername(username);
-        assertEquals("redirect:/trainees", viewName);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(traineeService, times(1)).activateDeactivateTrainee(username, isActive);
     }
 
     @Test
-    void testGetTraineeTrainingList() {
-        // Setup
+    void updateTraineeTrainers_TrainersUpdated_ReturnsUpdatedTrainers() {
         String username = "testUser";
-        LocalDate fromDate = LocalDate.of(2022, 1, 1);
-        LocalDate toDate = LocalDate.of(2022, 12, 31);
-        String trainerName = "John Doe";
-        String trainingTypeName = "Cardio";
-        List<Training> trainingList = new ArrayList<>();
-        when(traineeService.getTraineeTrainingList(username, fromDate, toDate, trainerName, trainingTypeName)).thenReturn(trainingList);
-        Model model = mock(Model.class);
-        List<Trainee> trainees = new ArrayList<>();
-        when(traineeService.getAllTrainees()).thenReturn(trainees);
-        Optional<Trainee> trainee = Optional.of(new Trainee());
-        when(traineeService.getTraineeByUsername(username)).thenReturn(trainee);
-        List<Trainer> availableTrainers = new ArrayList<>();
-        when(trainerService.getAvailableTrainersByTrainee(trainee)).thenReturn(availableTrainers);
+        List<String> trainerUsernames = new ArrayList<>();
+        trainerUsernames.add("trainer1");
 
-        // Execution
-        String viewName = traineeController.getTraineeTrainingList(username, fromDate, toDate, trainerName, trainingTypeName, model);
+        List<TrainerInfo> updatedTrainers = new ArrayList<>();
+        updatedTrainers.add(new TrainerInfo());
 
-        // Verification
-        verify(traineeService).getTraineeTrainingList(username, fromDate, toDate, trainerName, trainingTypeName);
-        verify(model).addAttribute("trainingList", trainingList);
-        verify(model).addAttribute("trainees", trainees);
-        verify(model).addAttribute("trainee", new Trainee());
-        verify(model).addAttribute("trainer", new Trainer());
-        verify(traineeService).getTraineeByUsername(username);
-        verify(trainerService).getAvailableTrainersByTrainee(trainee);
-        assertEquals("trainee/training-list", viewName);
+        when(traineeService.updateTraineeTrainers(username, trainerUsernames)).thenReturn(updatedTrainers);
+
+        ResponseEntity<List<TrainerInfo>> response = traineeController.updateTraineeTrainers(username, trainerUsernames);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(updatedTrainers);
+        verify(traineeService, times(1)).updateTraineeTrainers(username, trainerUsernames);
     }
-
-     */
-
-
 }

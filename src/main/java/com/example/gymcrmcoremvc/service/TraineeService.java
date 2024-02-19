@@ -171,7 +171,7 @@ public class TraineeService {
                 .collect(Collectors.toList());
     }
 
-    private TrainerInfo mapToTrainerProfileResponse(Trainer trainer) {
+    TrainerInfo mapToTrainerProfileResponse(Trainer trainer) {
         return new TrainerInfo(
                 trainer.getUsername(),
                 trainer.getFirstName(),

@@ -6,6 +6,7 @@ import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.service.RegistrationLoginService;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,8 @@ public class RegistrationLoginController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<String> login(@RequestParam @NotBlank String username,
+                                        @RequestParam @NotBlank String password) {
         // Perform login logic here
         Optional<Trainee> authenticatedTrainee = traineeService.authenticateTrainee(username, password);
         Optional<Trainer> authenticatedTrainer = trainerService.authenticateTrainer(username, password);
@@ -64,7 +66,7 @@ public class RegistrationLoginController {
     }
 
     @PutMapping("/change-login")
-    public ResponseEntity<String> changeLogin(@RequestBody ChangeLoginRequest request) {
+    public ResponseEntity<String> changeLogin(@Valid @RequestBody ChangeLoginRequest request) {
         Optional<Trainee> authenticatedTrainee = traineeService.authenticateTrainee(request.getUsername(), request.getOldPassword());
         Optional<Trainer> authenticatedTrainer = trainerService.authenticateTrainer(request.getUsername(), request.getOldPassword());
 
@@ -78,26 +80,30 @@ public class RegistrationLoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password"); // Return 401 Unauthorized if authentication fails
         }
     }
+
+    /*
     // ExceptionHandler on the controller allow exception handling on the is only active for that particular Controller,
     // not globally for the entire application. Whereas, @ControllerAdvice allows the exception handling for all endpoints
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-//        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
-//                .map(FieldError::getDefaultMessage)
-//                .findFirst()
-//                .orElse("Validation error occurred");
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
-//    }
-//
-//
-//    @ExceptionHandler(ConstraintViolationException.class)
-//    public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
-//        String errorMessage = ex.getConstraintViolations().stream()
-//                .map(ConstraintViolation::getMessage)
-//                .findFirst()
-//                .orElse("Validation error occurred");
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
-//    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                .map(FieldError::getDefaultMessage)
+                .findFirst()
+                .orElse("Validation error occurred");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
+
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
+        String errorMessage = ex.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .findFirst()
+                .orElse("Validation error occurred");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
+
+     */
 
 }
 

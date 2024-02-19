@@ -8,6 +8,8 @@ import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
 import com.example.gymcrmcoremvc.service.TrainingService;
 import com.example.gymcrmcoremvc.service.TrainingTypeService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +23,11 @@ import java.util.List;
 public class TrainingController {
 
     private final TrainingService trainingService;
-    private final TraineeService traineeService;
-    private final TrainerService trainerService;
-    private final TrainingTypeService trainingTypeService;
+
 
     @Autowired
-    public TrainingController(TrainingService trainingService, TraineeService traineeService,
-                              TrainerService trainerService, TrainingTypeService trainingTypeService) {
+    public TrainingController(TrainingService trainingService) {
         this.trainingService = trainingService;
-        this.traineeService = traineeService;
-        this.trainerService = trainerService;
-        this.trainingTypeService = trainingTypeService;
     }
 
     @GetMapping
@@ -45,27 +41,26 @@ public class TrainingController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addTraining(@RequestBody TrainingRequest request) {
+    public ResponseEntity<String> addTraining(@RequestBody @Valid TrainingRequest request) {
         trainingService.addTraining(request);
         return ResponseEntity.status(HttpStatus.OK).body("Training created succesfully");
     }
 
     @GetMapping("/trainee-trainings")
     public ResponseEntity<List<TrainingTraineeResponse>> getTraineeTrainingsList(
-            @RequestParam(required = true) String username,
+            @RequestParam(required = true) @NotBlank String username,
             @RequestParam(required = false) LocalDate periodFrom,
             @RequestParam(required = false) LocalDate periodTo,
             @RequestParam(required = false) String trainerName,
             @RequestParam(required = false) String trainingTypeName) {
 
         List<TrainingTraineeResponse> trainings = trainingService.getTraineeTrainingList(username, periodFrom, periodTo, trainerName, trainingTypeName);
-
         return ResponseEntity.ok().body(trainings);
     }
 
     @GetMapping("/trainer-trainings")
     public ResponseEntity<List<TrainingTrainerResponse>> getTrainerTrainingsList(
-            @RequestParam(required = true) String username,
+            @RequestParam(required = true) @NotBlank String username,
             @RequestParam(required = false) LocalDate periodFrom,
             @RequestParam(required = false) LocalDate periodTo,
             @RequestParam(required = false) String traineeName,

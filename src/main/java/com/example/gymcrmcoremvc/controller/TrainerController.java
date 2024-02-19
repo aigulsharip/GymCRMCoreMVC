@@ -3,9 +3,9 @@ package com.example.gymcrmcoremvc.controller;
 import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerProfileResponse;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerUpdateRequest;
-import com.example.gymcrmcoremvc.service.RegistrationLoginService;
 import com.example.gymcrmcoremvc.service.TrainerService;
-import com.example.gymcrmcoremvc.service.TrainingTypeService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,6 @@ public class TrainerController {
     @Autowired
     private TrainerService trainerService;
 
-    @Autowired
-    private TrainingTypeService trainingTypeService;
-
-    @Autowired
-    private RegistrationLoginService registrationLoginService;
 
     @GetMapping
     public ResponseEntity<List<Trainer>> getAllTrainers() {
@@ -37,7 +32,7 @@ public class TrainerController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<TrainerProfileResponse> getTrainerProfile(@RequestParam String username) {
+    public ResponseEntity<TrainerProfileResponse> getTrainerProfile(@RequestParam @NotBlank String username) {
         TrainerProfileResponse profileResponse = trainerService.getTrainerProfile(username);
         if (profileResponse != null) {
             return ResponseEntity.ok(profileResponse);
@@ -47,8 +42,8 @@ public class TrainerController {
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<TrainerProfileResponse> updateTrainerProfile(@RequestParam String username,
-                                                                       @RequestBody TrainerUpdateRequest request) {
+    public ResponseEntity<TrainerProfileResponse> updateTrainerProfile(@RequestParam @NotBlank String username,
+                                                                       @RequestBody @Valid TrainerUpdateRequest request) {
         TrainerProfileResponse updatedProfile = trainerService.updateTrainerProfile(username, request);
         if (updatedProfile != null) {
             return ResponseEntity.ok(updatedProfile);
@@ -58,7 +53,7 @@ public class TrainerController {
     }
 
     @DeleteMapping("/profile")
-    public ResponseEntity<String> deleteTrainerProfile(@RequestParam String username) {
+    public ResponseEntity<String> deleteTrainerProfile(@RequestParam @NotBlank String username) {
         boolean deleted = trainerService.deleteTrainerProfile(username);
         if (deleted) {
             return ResponseEntity.ok("Trainer profile deleted successfully");
@@ -68,13 +63,11 @@ public class TrainerController {
     }
 
     @PatchMapping("/activate-deactivate")
-    public ResponseEntity<Void> activateDeactivateTrainer(@RequestParam String username,
+    public ResponseEntity<Void> activateDeactivateTrainer(@RequestParam @NotBlank String username,
                                                           @RequestParam boolean isActive) {
         trainerService.activateDeactivateTrainer(username, isActive);
         return ResponseEntity.ok().build();
     }
-
-
 
 
 }

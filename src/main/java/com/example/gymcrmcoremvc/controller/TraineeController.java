@@ -7,6 +7,8 @@ import com.example.gymcrmcoremvc.entity.trainer.TrainerProfileResponse;
 import com.example.gymcrmcoremvc.service.RegistrationLoginService;
 import com.example.gymcrmcoremvc.service.TraineeService;
 import com.example.gymcrmcoremvc.service.TrainerService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +41,7 @@ public class TraineeController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<TraineeProfileResponse> getTraineeProfile(@RequestParam String username) {
+    public ResponseEntity<TraineeProfileResponse> getTraineeProfile(@RequestParam @NotBlank String username) {
         TraineeProfileResponse profileResponse = traineeService.getTraineeProfile(username);
 
         if (profileResponse != null) {
@@ -50,8 +52,8 @@ public class TraineeController {
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<TraineeProfileResponse> updateTraineeProfile(@RequestParam String username,
-                                                                       @RequestBody TraineeUpdateRequest request) {
+    public ResponseEntity<TraineeProfileResponse> updateTraineeProfile(@RequestParam @NotBlank String username,
+                                                                       @Valid @RequestBody TraineeUpdateRequest request) {
         TraineeProfileResponse updatedProfile = traineeService.updateTraineeProfile(username, request);
         if (updatedProfile != null) {
             return ResponseEntity.ok(updatedProfile);
@@ -61,7 +63,7 @@ public class TraineeController {
     }
 
     @DeleteMapping("/profile")
-    public ResponseEntity<String> deleteTraineeProfile(@RequestParam String username) {
+    public ResponseEntity<String> deleteTraineeProfile(@RequestParam @NotBlank String username) {
         boolean deleted = traineeService.deleteTraineeProfile(username);
         if (deleted) {
             return ResponseEntity.ok("Trainee profile deleted successfully");
@@ -71,7 +73,7 @@ public class TraineeController {
     }
 
     @GetMapping("/not-assigned-trainers")
-    public ResponseEntity<List<TrainerInfo>> getNotAssignedActiveTrainers(@RequestParam String username) {
+    public ResponseEntity<List<TrainerInfo>> getNotAssignedActiveTrainers(@RequestParam @NotBlank String username) {
         List<TrainerInfo> notAssignedActiveTrainers = traineeService.getNotAssignedActiveTrainers(username);
         if (!notAssignedActiveTrainers.isEmpty()) {
             return ResponseEntity.ok(notAssignedActiveTrainers);
@@ -81,7 +83,7 @@ public class TraineeController {
     }
 
     @PatchMapping("/activate-deactivate")
-    public ResponseEntity<Void> activateDeactivateTrainee(@RequestParam String username,
+    public ResponseEntity<Void> activateDeactivateTrainee(@RequestParam @NotBlank String username,
                                                           @RequestParam boolean isActive) {
         traineeService.activateDeactivateTrainee(username, isActive);
         return ResponseEntity.ok().build();
@@ -89,11 +91,13 @@ public class TraineeController {
 
     @PutMapping("/update-trainers")
     public ResponseEntity<List<TrainerInfo>> updateTraineeTrainers(
-            @RequestParam String username,
+            @RequestParam @NotBlank String username,
             @RequestBody List<String> trainerUsernames) {
         List<TrainerInfo> updatedTrainers = traineeService.updateTraineeTrainers(username, trainerUsernames);
         return ResponseEntity.ok(updatedTrainers);
     }
+
+
 
 
 }

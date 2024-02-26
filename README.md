@@ -42,63 +42,30 @@ To integrate this module into your project, follow these steps:
 
 
 ## Project Completion Comments:
-The project can be accessed via the following link: https://github.com/aigulsharip/GymCRMCoreMVC.git
+The project can be accessed via the following link: https://github.com/aigulsharip/GymCRMCoreMVC.git. 
+Branch: spring-boot-task from rest-task 
 
 All the tasks (No.1-17) has been completed fully.
+1. Convert existing application to be Spring boot Application.
+    This project has been already created and run as Spring Boot Application, so no conversion is needed.
+2. Enable actuator.
+     Implement a few custom health indicators.
+     * Few custom health indicators has been implemented in ExternalServiceHealthIndicator and CustomHealthIndicator. 
+     Implement a few custom metrics using Prometheus.
+     * Few custom metrics has been implemented in CustomMetricsController using CustomMetricsCollector.
+3. Implement support for different environments (local, dev, stg, prod). Use Spring profiles.
+   Profiles for dev and prod environment has been created
+   different properties for server port and database configurations has been indicated in 
+   application-dev.properties and application-prod.properties
 
 ## Comments on Notes:
-1. During Create Trainer/Trainee profile username and password should be generated as
-   described in previous modules.
-   Implemented username and password generation as described in the previous module.
-2. Not possible to register as a trainer and trainee both.
-   Yes, this logic was implemented in RegistrationLoginService class and used in RegistrationLoginController
-3. All functions except Create Trainer/Trainee profile. Should be executed only after
-   Trainee/Trainer authentication (on this step should be checked username and password
-   matching).
+
+1. Cover code with unit tests. Code should contain proper logging.
+   Wrote unit tests for Trainee, TraineeService, and TraineeController, achieving more than 80% coverage.
+   Logging was implemented in LoggingInterceptor and WebMvcConfig classes.
+   Implemented logging using @Slf4j for all service and controller classes.
+2. Pay attention that each environment - different db properties.
+   Different db configs indicatedd for each environment
+3. All functions except Create Trainer/Trainee profile. Should be executed only after Trainee/Trainer authentication (on this step should be checked
+username and password matching).
    Will be completed in Spring Security module.
-4. Implement required validation for each endpoint.
-   Added validation for required fields, such as firstName (@NotBlank), lastName (@NotBlank), and birthDate (@Past)
-   of the Trainee entity. Default error messages are displayed if irrelevant inputs are provided.
-5. Users Table has parent-child (one to one) relation with Trainer and Trainee tables.
-   This table was not used at all.
-6. Training functionality does not include delete/update possibility via REST
-    Yes, delete/update functionality was not implemented.
-7. Username cannot be changed.
-    Generated username can not be changed
-8. Trainees and Trainers have many to many relations.
-   Trainees and Trainers have many to many relations.
-9. Activate/De-activate Trainee/Trainer profile not idempotent action.
-   Implemented activation/deactivation of profiles as non-idempotent actions, where the activation status toggles with each action.
-10. Delete Trainee profile is hard deleting action and bring the cascade deletion of relevant
-    trainings.
-    Improved Trainee's delete functionality to perform hard deletion, resulting in the
-    cascade deletion of relevant trainings associated with the deleted trainee.
-11. Training duration have a number type. 
-    Used number type for training duration (in minutes) and date type for training date.
-12. Training Date, Trainee Date of Birth have Date type.
-    LocalDate is used for the trainee's date of birth to avoid unnecessary timestamps.
-13. Is Active field in Trainee/Trainer profile has Boolean type.
-    Utilized boolean type for the "Is Active" field in both trainee and trainer profiles.
-14. Training Types table include constant list of values and could not be updated from the
-    application.
-    Created a constant list of values for training types using Flyway and provided functionality to retrieve all training types.
-15. Implement error handling for all endpoints.
-    Error handling was implemented in GlobalExceptionHandler class.
-16. Cover code with unit tests.
-    Wrote unit tests for Trainee, TraineeService, and TraineeController, achieving more than 80% coverage.
-    Implemented logging using @Slf4j for TraineeService and TraineeController classes.
-17. Two levels of logging should be implemented:
-    Transaction level (generate transactionId by which you can track all operations
-    for this transaction the same transactionId can later be passed to downstream
-    services)
-    Specific rest call details (which endpoint was called, which request came and the
-    service response - 200 or error and response message).
-    Logging was implemented in LoggingInterceptor and WebMvcConfig classes.
-    Implemented logging using @Slf4j for all service and controller classes. 
-18. Implement error handling.
-    Error handling was implemented in GlobalExceptionHandler class.
-19. Document methods in RestController file(s) using Swagger 2 annotations
-    Swagger documentation available here: http://localhost:8080/swagger-ui/index.html
-    OpenAPI descriptions at: http://localhost:8080/api-docs
-    Custom description can be added to our API using a couple of OpenAPI-specific annotations: @Operation and @ApiResponses
-    Generated documentation for TrainingTypeController using these annotations.

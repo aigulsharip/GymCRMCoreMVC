@@ -5,11 +5,9 @@ import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.entity.Training;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import com.example.gymcrmcoremvc.repository.TrainingRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.*;
+import javax.persistence.*;
+import javax.persistence.criteria.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

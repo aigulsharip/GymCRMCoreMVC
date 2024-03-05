@@ -1,9 +1,11 @@
 package com.example.gymcrmcoremvc.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import lombok.*;
+
+import javax.persistence.GeneratedValue;
 import java.time.LocalDate;
 
 @Entity

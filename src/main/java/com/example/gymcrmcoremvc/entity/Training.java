@@ -1,7 +1,7 @@
 package com.example.gymcrmcoremvc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;

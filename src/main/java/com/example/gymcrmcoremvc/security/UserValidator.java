@@ -6,30 +6,27 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-/**
- * @author Neil Alishev
- */
 @Component
-public class PersonValidator implements Validator {
+public class UserValidator implements Validator {
 
-    private final PersonDetailsService personDetailsService;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public PersonValidator(PersonDetailsService personDetailsService) {
-        this.personDetailsService = personDetailsService;
+    public UserValidator(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return Person.class.equals(aClass);
+        return User.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        Person person = (Person) o;
+        User user = (User) o;
 
         try {
-            personDetailsService.loadUserByUsername(person.getUsername());
+            userDetailsService.loadUserByUsername(user.getUsername());
         } catch (UsernameNotFoundException ignored) {
             return; // все ок, пользователь не найден
         }

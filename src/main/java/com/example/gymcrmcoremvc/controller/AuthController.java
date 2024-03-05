@@ -1,7 +1,7 @@
 package com.example.gymcrmcoremvc.controller;
 
-import com.example.gymcrmcoremvc.security.Person;
-import com.example.gymcrmcoremvc.security.PersonValidator;
+import com.example.gymcrmcoremvc.security.User;
+import com.example.gymcrmcoremvc.security.UserValidator;
 import com.example.gymcrmcoremvc.security.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,12 +18,12 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final RegistrationService registrationService;
-    private final PersonValidator personValidator;
+    private final UserValidator userValidator;
 
     @Autowired
-    public AuthController(RegistrationService registrationService, PersonValidator personValidator) {
+    public AuthController(RegistrationService registrationService, UserValidator userValidator) {
         this.registrationService = registrationService;
-        this.personValidator = personValidator;
+        this.userValidator = userValidator;
     }
 
     @GetMapping("/login")
@@ -32,19 +32,19 @@ public class AuthController {
     }
 
     @GetMapping("/registration")
-    public String registrationPage(@ModelAttribute("person") Person person) {
+    public String registrationPage(@ModelAttribute("user") User user) {
         return "auth/registration";
     }
 
     @PostMapping("/registration")
-    public String performRegistration(@ModelAttribute("person") @Valid Person person,
+    public String performRegistration(@ModelAttribute("user") @Valid User user,
                                       BindingResult bindingResult) {
-        personValidator.validate(person, bindingResult);
+        userValidator.validate(user, bindingResult);
 
         if (bindingResult.hasErrors())
             return "/auth/registration";
 
-        registrationService.register(person);
+        registrationService.register(user);
 
         return "redirect:/auth/login";
     }

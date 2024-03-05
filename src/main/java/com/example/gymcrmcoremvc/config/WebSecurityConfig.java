@@ -1,6 +1,6 @@
 package com.example.gymcrmcoremvc.config;
 
-import com.example.gymcrmcoremvc.security.PersonDetailsService;
+import com.example.gymcrmcoremvc.security.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,12 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
-    private final PersonDetailsService personDetailsService;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public WebSecurityConfig(PersonDetailsService personDetailsService) {
-        this.personDetailsService = personDetailsService;
+    public WebSecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -46,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // Настраиваем аутентификацию
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(personDetailsService)
+        auth.userDetailsService(userDetailsService)
                 .passwordEncoder(getPasswordEncoder());
     }
 

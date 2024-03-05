@@ -1,6 +1,8 @@
 package com.example.gymcrmcoremvc.entity.trainingType;
 
-import jakarta.persistence.*;
+//import jakarta.persistence.*;
+import javax.persistence.*;
+
 import lombok.Data;
 
 @Entity

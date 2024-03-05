@@ -1,4 +1,4 @@
-package com.example.gymcrmcoremvc.actuator;
+package com.example.gymcrmcoremvc.actuator.metrics;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -20,5 +20,6 @@ public class CustomMetricsCollector {
 
     public void incrementCustomCounter() {
         customCounter.increment();
+
     }
 }

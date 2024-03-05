@@ -1,4 +1,4 @@
-package com.example.gymcrmcoremvc.service;
+package com.example.gymcrmcoremvc.service.rest;
 
 import com.example.gymcrmcoremvc.entity.trainingType.TrainingType;
 import com.example.gymcrmcoremvc.entity.trainingType.TrainingTypeResponse;

@@ -1,4 +1,4 @@
-package com.example.gymcrmcoremvc.actuator;
+package com.example.gymcrmcoremvc.actuator.health;
 
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
 import org.springframework.boot.actuate.health.Health;

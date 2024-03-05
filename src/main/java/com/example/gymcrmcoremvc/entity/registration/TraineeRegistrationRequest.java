@@ -1,8 +1,11 @@
 package com.example.gymcrmcoremvc.entity.registration;
+//
+//import jakarta.validation.constraints.NotBlank;
+//import jakarta.validation.constraints.NotNull;
+//import jakarta.validation.constraints.Past;
+//import javax.validation.*;
+import javax.validation.constraints.*;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

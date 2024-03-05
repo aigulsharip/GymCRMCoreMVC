@@ -1,9 +1,12 @@
 package com.example.gymcrmcoremvc.entity.trainee;
 
 import com.example.gymcrmcoremvc.entity.trainer.Trainer;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
+//import jakarta.persistence.*;
+//import jakarta.validation.constraints.NotBlank;
+//import jakarta.validation.constraints.Past;
+import javax.validation.constraints.*;
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

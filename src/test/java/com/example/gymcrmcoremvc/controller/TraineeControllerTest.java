@@ -1,10 +1,11 @@
 package com.example.gymcrmcoremvc.controller;
 
+import com.example.gymcrmcoremvc.controller.rest.TraineeController;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.trainee.TraineeProfileResponse;
 import com.example.gymcrmcoremvc.entity.trainee.TraineeUpdateRequest;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerInfo;
-import com.example.gymcrmcoremvc.service.TraineeService;
+import com.example.gymcrmcoremvc.service.rest.TraineeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

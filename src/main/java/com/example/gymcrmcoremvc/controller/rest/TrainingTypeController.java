@@ -1,9 +1,8 @@
-package com.example.gymcrmcoremvc.controller;
+package com.example.gymcrmcoremvc.controller.rest;
 
 import com.example.gymcrmcoremvc.entity.trainingType.TrainingTypeResponse;
-import com.example.gymcrmcoremvc.service.TrainingTypeService;
+import com.example.gymcrmcoremvc.service.rest.TrainingTypeService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/training-types")
+@RequestMapping("/api/training-types")
 @Api(tags = "Training Types")
 @Slf4j
 public class TrainingTypeController {

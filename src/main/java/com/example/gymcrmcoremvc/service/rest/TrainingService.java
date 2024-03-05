@@ -1,4 +1,4 @@
-package com.example.gymcrmcoremvc.service;
+package com.example.gymcrmcoremvc.service.rest;
 
 
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
@@ -11,11 +11,14 @@ import com.example.gymcrmcoremvc.entity.trainingType.TrainingType;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;
 import com.example.gymcrmcoremvc.repository.TrainingRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Tuple;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.*;
+//import jakarta.persistence.EntityManager;
+//import jakarta.persistence.PersistenceContext;
+//import jakarta.persistence.Tuple;
+//import jakarta.persistence.TypedQuery;
+//import jakarta.persistence.criteria.*;
+import javax.persistence.*;
+import javax.persistence.criteria.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

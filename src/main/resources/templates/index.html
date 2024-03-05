@@ -8,38 +8,39 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Gym CRM</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a th:href="@{/trainees}" class="nav-link">Manage Trainees</a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/trainee-login}" class="nav-link">Trainee Login</a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/trainers}" class="nav-link">Manage Trainers</a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/trainer-login}" class="nav-link">Trainer Login</a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/training-types}" class="nav-link">Training Types</a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/trainings}" class="nav-link">Manage Trainings</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<div th:replace="header :: header"></div>
+<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">-->
+<!--    <div class="container-fluid">-->
+<!--        <a class="navbar-brand" href="#">Gym CRM</a>-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"-->
+<!--                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"-->
+<!--                aria-label="Toggle navigation">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+<!--        <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--            <ul class="navbar-nav">-->
+<!--                <li class="nav-item">-->
+<!--                    <a th:href="@{/trainees}" class="nav-link">Manage Trainees</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a th:href="@{/trainee-login}" class="nav-link">Trainee Login</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a th:href="@{/trainers}" class="nav-link">Manage Trainers</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a th:href="@{/trainer-login}" class="nav-link">Trainer Login</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a th:href="@{/training-types}" class="nav-link">Training Types</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a th:href="@{/trainings}" class="nav-link">Manage Trainings</a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
 
 <div class="container mt-5">
     <h2 class="text-center mb-5">Welcome to Gym CRM</h2>

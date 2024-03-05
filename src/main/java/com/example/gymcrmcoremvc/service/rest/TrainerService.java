@@ -1,4 +1,4 @@
-package com.example.gymcrmcoremvc.service;
+package com.example.gymcrmcoremvc.service.rest;
 
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.trainee.TraineeInfo;
@@ -6,7 +6,8 @@ import com.example.gymcrmcoremvc.entity.trainer.Trainer;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerProfileResponse;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerUpdateRequest;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;
-import jakarta.persistence.EntityNotFoundException;
+//import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

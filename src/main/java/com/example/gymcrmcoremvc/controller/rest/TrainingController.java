@@ -1,26 +1,23 @@
-package com.example.gymcrmcoremvc.controller;
+package com.example.gymcrmcoremvc.controller.rest;
 
 import com.example.gymcrmcoremvc.entity.training.Training;
 import com.example.gymcrmcoremvc.entity.training.TrainingRequest;
 import com.example.gymcrmcoremvc.entity.training.TrainingTraineeResponse;
 import com.example.gymcrmcoremvc.entity.training.TrainingTrainerResponse;
-import com.example.gymcrmcoremvc.service.TraineeService;
-import com.example.gymcrmcoremvc.service.TrainerService;
-import com.example.gymcrmcoremvc.service.TrainingService;
-import com.example.gymcrmcoremvc.service.TrainingTypeService;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import com.example.gymcrmcoremvc.service.rest.TrainingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/trainings")
+@RequestMapping("/api/trainings")
 @Slf4j
 public class TrainingController {
 

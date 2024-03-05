@@ -1,12 +1,13 @@
-package com.example.gymcrmcoremvc.controller;
+package com.example.gymcrmcoremvc.controller.rest;
 
 import com.example.gymcrmcoremvc.entity.registration.*;
 import com.example.gymcrmcoremvc.entity.trainee.Trainee;
 import com.example.gymcrmcoremvc.entity.trainer.Trainer;
-import com.example.gymcrmcoremvc.service.RegistrationLoginService;
-import com.example.gymcrmcoremvc.service.TraineeService;
-import com.example.gymcrmcoremvc.service.TrainerService;
-import jakarta.validation.constraints.NotBlank;
+import com.example.gymcrmcoremvc.service.rest.RegistrationLoginService;
+import com.example.gymcrmcoremvc.service.rest.TraineeService;
+import com.example.gymcrmcoremvc.service.rest.TrainerService;
+import javax.validation.constraints.*;
+//import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +62,7 @@ public class RegistrationLoginController {
         return ResponseEntity.status(HttpStatus.CREATED).body(trainerRegistrationResponse);
     }
 
-    @GetMapping("/login")
+    @GetMapping("/sign-in")
     public ResponseEntity<String> login(@RequestParam @NotBlank String username,
                                         @RequestParam @NotBlank String password) {
         log.info("Received login request for user: {}", username);

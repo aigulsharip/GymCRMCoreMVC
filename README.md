@@ -65,7 +65,7 @@ All the tasks (No.1-17) has been completed fully.
    Logging was implemented in LoggingInterceptor and WebMvcConfig classes.
    Implemented logging using @Slf4j for all service and controller classes.
 2. Pay attention that each environment - different db properties.
-   Different db configs indicatedd for each environment
+   Different db configs indicated for each environment
 3. All functions except Create Trainer/Trainee profile. Should be executed only after Trainee/Trainer authentication (on this step should be checked
 username and password matching).
    Will be completed in Spring Security module.

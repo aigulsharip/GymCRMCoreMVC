@@ -1,13 +1,15 @@
-package com.example.gymcrmcoremvc.controller;
+package com.example.gymcrmcoremvc.controller.rest;
 
 import com.example.gymcrmcoremvc.entity.trainee.*;
 import com.example.gymcrmcoremvc.entity.trainer.TrainerInfo;
-import com.example.gymcrmcoremvc.entity.trainer.TrainerProfileResponse;
-import com.example.gymcrmcoremvc.service.RegistrationLoginService;
-import com.example.gymcrmcoremvc.service.TraineeService;
-import com.example.gymcrmcoremvc.service.TrainerService;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import com.example.gymcrmcoremvc.service.rest.RegistrationLoginService;
+import com.example.gymcrmcoremvc.service.rest.TraineeService;
+import com.example.gymcrmcoremvc.service.rest.TrainerService;
+//import jakarta.validation.Valid;
+//import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
+import javax.validation.Valid;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/trainees")
+@RequestMapping("/api/trainees")
 @Slf4j
 public class TraineeController {
 

@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.GeneratedValue;
 import java.time.LocalDate;
@@ -36,6 +37,7 @@ public class Trainee {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "date_of_birth")
     @Past(message = "Birthday should be in the past")
     private LocalDate dateOfBirth;

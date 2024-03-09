@@ -52,22 +52,6 @@ public class TraineeController {
         }
     }
 
-    @GetMapping("/add")
-    public String showAddForm(Model model) {
-        model.addAttribute("trainee", new Trainee());
-        return "trainee/add";
-    }
-
-    @PostMapping("/add")
-    public String addTrainee(@Valid @ModelAttribute Trainee trainee, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("trainee", trainee);
-            model.addAttribute("errors", bindingResult.getAllErrors());
-            return "trainee/add"; // Assuming trainee_form is your form view
-        }
-        traineeService.saveTrainee(trainee);
-        return "redirect:/trainees";
-    }
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {

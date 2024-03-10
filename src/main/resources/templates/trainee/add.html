@@ -33,6 +33,11 @@
             <span th:each="error : ${errors}" th:if="${error.field == 'lastName'}" class="error" th:text="${error.defaultMessage}"></span>
         </div>
         <div class="mb-3">
+            <label class="form-label">Password:</label>
+            <input type="password" class="form-control" th:field="*{password}" required/>
+            <span th:each="error : ${errors}" th:if="${error.field == 'password'}" class="error" th:text="${error.defaultMessage}"></span>
+        </div>
+        <div class="mb-3">
             <label class="form-label">Date of Birth:</label>
             <input type="date" class="form-control" th:field="*{dateOfBirth}"/>
             <span th:each="error : ${errors}" th:if="${error.field == 'dateOfBirth'}" class="error" th:text="${error.defaultMessage}"></span>

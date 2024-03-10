@@ -1,4 +1,4 @@
-package com.example.gymcrmcoremvc.security;
+package com.example.gymcrmcoremvc.service;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;

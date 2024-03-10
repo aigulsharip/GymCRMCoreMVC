@@ -62,7 +62,10 @@ public class RegistrationService {
     public Trainee saveTrainee(Trainee trainee) {
         log.info("Saving new trainee: {}", trainee);
         trainee.setUsername(calculateUsername(trainee.getFirstName(), trainee.getLastName()));
-        trainee.setPassword(generatePassword());
+        // using password encoding
+        // trainee.setPassword(passwordEncoder.encode(trainee.getPassword()));
+
+        trainee.setPassword(trainee.getPassword());
         trainee.setIsActive(true);
         log.info("Trainee registered successfully: {}", trainee);
         return traineeRepository.save(trainee);
@@ -72,7 +75,9 @@ public class RegistrationService {
     public Trainer saveTrainer(Trainer trainer) {
         log.info("Saving new trainer: {}", trainer);
         trainer.setUsername(calculateUsername(trainer.getFirstName(), trainer.getLastName()));
-        trainer.setPassword(generatePassword());
+        // using password encoding
+        // trainer.setPassword(passwordEncoder.encode(trainer.getPassword()));
+        trainer.setPassword(trainer.getPassword());
         trainer.setIsActive(true);
         trainer.setTrainingType(trainingTypeService.getTrainingTypeById(trainer.getTrainingType().getId()).orElse(null));
 
@@ -101,7 +106,7 @@ public class RegistrationService {
         while (traineeRepository.existsByUsername(calculatedUsername)) {
             calculatedUsername = baseUsername + counter++;
         }
-        return calculatedUsername;
+        return calculatedUsername.toLowerCase();
     }
 
     private String generatePassword() {

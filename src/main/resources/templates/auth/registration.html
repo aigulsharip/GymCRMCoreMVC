@@ -5,6 +5,7 @@
     <title>Registration</title>
 </head>
 <body>
+<div th:replace="header :: header"></div>
 
 <form th:method="POST" th:action="@{/auth/registration}" th:object="${user}">
     <label for="username">Введите имя пользователя: </label>

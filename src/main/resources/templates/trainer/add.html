@@ -25,6 +25,11 @@
             <input type="text" class="form-control" th:field="*{lastName}" required/>
         </div>
         <div class="mb-3">
+            <label class="form-label">Password:</label>
+            <input type="password" class="form-control" th:field="*{password}" required/>
+            <span th:each="error : ${errors}" th:if="${error.field == 'password'}" class="error" th:text="${error.defaultMessage}"></span>
+        </div>
+        <div class="mb-3">
             <label class="form-label">Training Type:</label>
             <select class="form-select" th:field="*{trainingType.id}" required>
                 <option th:each="type : ${trainingTypes}" th:value="${type.id}" th:text="${type.trainingTypeName}"></option>

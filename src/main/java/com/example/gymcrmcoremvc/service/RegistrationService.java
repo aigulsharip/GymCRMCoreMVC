@@ -1,8 +1,11 @@
-package com.example.gymcrmcoremvc.security;
+package com.example.gymcrmcoremvc.service;
 
 import com.example.gymcrmcoremvc.entity.Trainee;
+import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.repository.TraineeRepository;
 import com.example.gymcrmcoremvc.repository.TrainerRepository;
+import com.example.gymcrmcoremvc.security.User;
+import com.example.gymcrmcoremvc.security.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,12 +26,15 @@ public class RegistrationService {
 
     private final TrainerRepository trainerRepository;
 
+    private final TrainingTypeService trainingTypeService;
+
     @Autowired
-    public RegistrationService(UserRepository userRepository, PasswordEncoder passwordEncoder, TraineeRepository traineeRepository, TrainerRepository trainerRepository) {
+    public RegistrationService(UserRepository userRepository, PasswordEncoder passwordEncoder, TraineeRepository traineeRepository, TrainerRepository trainerRepository, TrainingTypeService trainingTypeService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.traineeRepository = traineeRepository;
         this.trainerRepository = trainerRepository;
+        this.trainingTypeService = trainingTypeService;
     }
 
     @Transactional
@@ -60,7 +66,17 @@ public class RegistrationService {
         trainee.setIsActive(true);
         log.info("Trainee registered successfully: {}", trainee);
         return traineeRepository.save(trainee);
+    }
 
+    @Transactional
+    public Trainer saveTrainer(Trainer trainer) {
+        log.info("Saving new trainer: {}", trainer);
+        trainer.setUsername(calculateUsername(trainer.getFirstName(), trainer.getLastName()));
+        trainer.setPassword(generatePassword());
+        trainer.setIsActive(true);
+        trainer.setTrainingType(trainingTypeService.getTrainingTypeById(trainer.getTrainingType().getId()).orElse(null));
+
+        return trainerRepository.save(trainer);
     }
 
     public boolean isTrainer(String firstName, String lastName) {

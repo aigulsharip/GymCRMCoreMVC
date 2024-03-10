@@ -1,6 +1,6 @@
 package com.example.gymcrmcoremvc.controller;
 
-import com.example.gymcrmcoremvc.security.RegistrationService;
+import com.example.gymcrmcoremvc.service.RegistrationService;
 import com.example.gymcrmcoremvc.security.User;
 import com.example.gymcrmcoremvc.security.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;

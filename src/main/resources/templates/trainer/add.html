@@ -9,8 +9,13 @@
 <body>
 <div class="container mt-5">
     <h2 class="mb-4">Add Trainer</h2>
+    <!-- Error message section -->
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
 
-    <form th:object="${trainer}" th:action="@{/trainers/add}" method="post">
+
+    <form th:object="${trainer}" th:action="@{/auth/register-trainer}" method="post">
         <div class="mb-3">
             <label class="form-label">First Name:</label>
             <input type="text" class="form-control" th:field="*{firstName}" required/>

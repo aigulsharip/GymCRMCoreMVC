@@ -49,19 +49,6 @@ public class TrainerController {
         }
     }
 
-    @GetMapping("/add")
-    public String showAddForm(Model model) {
-        List<TrainingType> trainingTypes = trainingTypeService.getAllTrainingTypes();
-        model.addAttribute("trainer", new Trainer());
-        model.addAttribute("trainingTypes", trainingTypes);
-        return "trainer/add";
-    }
-
-    @PostMapping("/add")
-    public String addTrainer(@ModelAttribute Trainer trainer) {
-        trainerService.saveTrainer(trainer);
-        return "redirect:/trainers";
-    }
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {

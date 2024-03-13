@@ -49,6 +49,15 @@
     </form>
 
     <p th:if="${param.error}" class="error-message">Invalid username or password</p>
+    <!-- Display block message if user is blocked -->
+    <p th:if="${param.error == 'blocked'}" class="block-message">You are blocked due to too many failed login attempts. Please try again later.</p>
+    <p th:if="${blocked}" class="block-message">You have been blocked due to too many failed login attempts. Please try again after some time.</p>
+    <span th:if="${loginError}">
+    Error logging in: <span th:text="${loginError}"></span> <!-- If loginError exists in the model, display it -->
+</span>
+
+
+
 </div>
 
 <!-- Bootstrap JS (Optional) -->

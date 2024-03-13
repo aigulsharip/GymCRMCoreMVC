@@ -8,12 +8,13 @@ import com.example.gymcrmcoremvc.service.RegistrationService;
 import com.example.gymcrmcoremvc.service.TrainingTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -48,12 +49,35 @@ public class RegistrationLoginController {
         return "redirect:/auth/login";
     }
 
-    @GetMapping("/login")
-    public String loginPage() {
-        return "auth/login";
+//    @GetMapping("/login")
+//    public String loginPage() {
+//        return "auth/login";
+//    }
+//    @GetMapping("/login")
+//    public String loginPage(@RequestParam(name = "error", required = false) String error, Model model) {
+//        if ("blocked".equals(error)) {
+//            model.addAttribute("blocked", true);
+//        }
+//        return "auth/login";
+//    }
+@GetMapping("/login")
+public String loginPage(Model model, HttpServletRequest request) {
+    //model.addAttribute("blocked", request.getParameter("blocked"));
+    try {
+        // login attempt code...
+    } catch (LockedException le) {
+        model.addAttribute("loginError", le.getMessage());
     }
+    return "auth/login";
+}
 
-
+//    @GetMapping("/login")
+//    public String showLoginPage(@RequestParam(value = "errorMessage", required = false) String errorMessage, Model model) {
+//        if (null != errorMessage) {
+//            model.addAttribute("errorMessage", errorMessage);
+//        }
+//        return "auth/login";
+//    }
 
     @GetMapping("/register-trainee")
     public String showAddForm(Model model) {

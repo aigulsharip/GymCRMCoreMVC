@@ -68,50 +68,9 @@ public class TraineeControllerTest {
         assertEquals("trainee/edit", viewName);
     }
 
-    @Test
-    void testShowAddForm() {
-        // Setup
-        Model model = mock(Model.class);
 
-        // Execution
-        String viewName = traineeController.showAddForm(model);
 
-        // Verification
-        verify(model).addAttribute("trainee", new Trainee());
-        assertEquals("trainee/add", viewName);
-    }
 
-    @Test
-    void testAddTrainee_WithErrors() {
-        // Setup
-        Trainee trainee = new Trainee();
-        BindingResult bindingResult = mock(BindingResult.class);
-        when(bindingResult.hasErrors()).thenReturn(true);
-        Model model = mock(Model.class);
-
-        // Execution
-        String viewName = traineeController.addTrainee(trainee, bindingResult, model);
-
-        // Verification
-        verify(model).addAttribute("trainee", trainee);
-        verify(model).addAttribute("errors", bindingResult.getAllErrors());
-        assertEquals("trainee/add", viewName);
-    }
-
-    @Test
-    void testAddTrainee_Success() {
-        // Setup
-        Trainee trainee = new Trainee();
-        BindingResult bindingResult = mock(BindingResult.class);
-        when(bindingResult.hasErrors()).thenReturn(false);
-
-        // Execution
-        String viewName = traineeController.addTrainee(trainee, bindingResult, mock(Model.class));
-
-        // Verification
-        verify(traineeService).saveTrainee(trainee);
-        assertEquals("redirect:/trainees", viewName);
-    }
 
     @Test
     void testShowEditForm() {

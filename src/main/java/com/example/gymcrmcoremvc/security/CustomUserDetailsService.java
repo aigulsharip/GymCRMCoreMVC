@@ -23,8 +23,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String ip = getClientIP();
-        if (loginAttemptService.isBlocked(ip)) {
-            throw new LockedException("blocked");
+        try {
+            if (loginAttemptService.isBlocked(ip)) {
+                throw new LockedException("You have been blocked due to too many failed login attempts. Please try again after some time");
+            }
+        } catch (LockedException e) {
+            throw e;
         }
 
         User user = userRepository.findByUsername(username).orElse(null);
@@ -36,7 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private String getClientIP() {
         String xfHeader = request.getHeader("X-Forwarded-For");
-        if (xfHeader == null){
+        if (xfHeader == null) {
             return request.getRemoteAddr();
         }
         return xfHeader.split(",")[0];

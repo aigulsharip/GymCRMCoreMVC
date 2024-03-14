@@ -3,12 +3,16 @@ package com.example.gymcrmcoremvc.controller;
 import com.example.gymcrmcoremvc.entity.Trainee;
 import com.example.gymcrmcoremvc.entity.Trainer;
 import com.example.gymcrmcoremvc.entity.TrainingType;
+import com.example.gymcrmcoremvc.security.LoginAttemptService;
 import com.example.gymcrmcoremvc.security.User;
 import com.example.gymcrmcoremvc.service.RegistrationService;
 import com.example.gymcrmcoremvc.service.TrainingTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +29,13 @@ public class RegistrationLoginController {
 
     private final RegistrationService registrationService;
     private final TrainingTypeService trainingTypeService;
+    @Autowired
+    private HttpServletRequest request;
+    @Autowired
+    private LoginAttemptService loginAttemptService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
 
     @Autowired
     public RegistrationLoginController(RegistrationService registrationService, TrainingTypeService trainingTypeService) {
@@ -49,35 +60,40 @@ public class RegistrationLoginController {
         return "redirect:/auth/login";
     }
 
-//    @GetMapping("/login")
-//    public String loginPage() {
-//        return "auth/login";
-//    }
-//    @GetMapping("/login")
-//    public String loginPage(@RequestParam(name = "error", required = false) String error, Model model) {
-//        if ("blocked".equals(error)) {
-//            model.addAttribute("blocked", true);
-//        }
-//        return "auth/login";
-//    }
-@GetMapping("/login")
-public String loginPage(Model model, HttpServletRequest request) {
-    //model.addAttribute("blocked", request.getParameter("blocked"));
-    try {
-        // login attempt code...
-    } catch (LockedException le) {
-        model.addAttribute("loginError", le.getMessage());
+    @GetMapping("/login")
+    public String loginPage(@RequestParam(name = "error", required = false) String error, Model model) {
+        String ip = getClientIP();
+        if (error != null) {
+            if (loginAttemptService.isBlocked(ip)) {
+                model.addAttribute("errorMessage", "You have been blocked due to too many failed login attempts. Please try again after some time.");
+            }
+        }
+        return "auth/login";
     }
-    return "auth/login";
-}
 
-//    @GetMapping("/login")
-//    public String showLoginPage(@RequestParam(value = "errorMessage", required = false) String errorMessage, Model model) {
-//        if (null != errorMessage) {
-//            model.addAttribute("errorMessage", errorMessage);
-//        }
-//        return "auth/login";
-//    }
+    private String getClientIP() {
+        String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
+    }
+
+    @PostMapping("/login")
+    public String processLogin(@RequestParam("username") String username,
+                               @RequestParam("password") String password,
+                               Model model) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            return "redirect:/";
+        } catch (LockedException e) {
+            model.addAttribute("loginError", "You are blocked");
+            return "auth/login";
+        } catch (AuthenticationException e) {
+            model.addAttribute("loginErrorgg", "Invalid username or passwordfdd");
+            return "auth/login";
+        }
+    }
 
     @GetMapping("/register-trainee")
     public String showAddForm(Model model) {
@@ -156,7 +172,6 @@ public String loginPage(Model model, HttpServletRequest request) {
         user.setRole("ROLE_TRAINER");
 
         registrationService.registerUserAsTrainer(user);
-
         return "redirect:/trainers";
     }
 

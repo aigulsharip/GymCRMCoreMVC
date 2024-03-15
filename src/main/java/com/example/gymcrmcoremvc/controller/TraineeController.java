@@ -67,7 +67,7 @@ public class TraineeController {
         return "redirect:/trainees";
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteTrainee(@PathVariable Long id) {
         traineeService.deleteTrainee(id);
         return "redirect:/trainees";

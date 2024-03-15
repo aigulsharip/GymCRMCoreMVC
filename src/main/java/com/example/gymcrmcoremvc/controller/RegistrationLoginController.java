@@ -9,10 +9,6 @@ import com.example.gymcrmcoremvc.service.RegistrationService;
 import com.example.gymcrmcoremvc.service.TrainingTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,8 +29,6 @@ public class RegistrationLoginController {
     private HttpServletRequest request;
     @Autowired
     private LoginAttemptService loginAttemptService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
 
     @Autowired
@@ -79,21 +73,6 @@ public class RegistrationLoginController {
         return xfHeader.split(",")[0];
     }
 
-    @PostMapping("/login")
-    public String processLogin(@RequestParam("username") String username,
-                               @RequestParam("password") String password,
-                               Model model) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            return "redirect:/";
-        } catch (LockedException e) {
-            model.addAttribute("loginError", "You are blocked");
-            return "auth/login";
-        } catch (AuthenticationException e) {
-            model.addAttribute("loginErrorgg", "Invalid username or passwordfdd");
-            return "auth/login";
-        }
-    }
 
     @GetMapping("/register-trainee")
     public String showAddForm(Model model) {

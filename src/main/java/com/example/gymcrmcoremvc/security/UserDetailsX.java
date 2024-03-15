@@ -2,16 +2,13 @@ package com.example.gymcrmcoremvc.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
-    private final User user;
 
-    public UserDetails(User user) {
-        this.user = user;
-    }
+public record UserDetailsX(User user) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -48,10 +45,6 @@ public class UserDetails implements org.springframework.security.core.userdetail
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public User getUser() {
-        return this.user;
     }
 
 }

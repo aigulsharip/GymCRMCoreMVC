@@ -46,14 +46,14 @@ public class RegistrationService {
 
     @Transactional
     public void registerUserAsTrainee(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
         user.setRole("ROLE_TRAINEE");
         userRepository.save(user);
     }
 
     @Transactional
     public void registerUserAsTrainer(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
         user.setRole("ROLE_TRAINER");
         userRepository.save(user);
     }
